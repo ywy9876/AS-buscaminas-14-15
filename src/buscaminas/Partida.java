@@ -5,6 +5,7 @@
  */
 package buscaminas;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.persistence.Entity;
@@ -14,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import java.util.Set;
 
 /**
  *
@@ -54,24 +54,43 @@ public class Partida {
         while(count < nombreMines) {
             Collections.shuffle(f);
             Collections.shuffle(c);
-            if(!minas.contains(f.get(0)+" "+c.get(0))) minas.add(f.get(0)+" "+c.get(0));
-            ++count;
+            if(!minas.contains(f.get(0)+" "+c.get(0))) {
+                minas.add(f.get(0)+" "+c.get(0));
+                ++count;
+            }
         }
         return minas;
     }
     
     
-    public void initPartida() {    
-        this.caselles = new Casella[nivell.getNombreCasellesxFila()][nivell.getNombreCasellesxColumna()];
+    public void initPartida() {
+        int nF = nivell.getNombreCasellesxFila();
+        int nC = nivell.getNombreCasellesxColumna();
+        this.caselles = new Casella[nF][nC];
         ArrayList<String> minas = generarMinas();
-        for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) {
-            for(int j = 0; j < nivell.getNombreCasellesxColumna(); ++j) {
+        for(int i = 0; i < nF; ++i) {
+            for(int j = 0; j < nC; ++j) {
                 boolean mina = false;
                 for(String st : minas) {
                     String[] parts = st.split(" ");
                     if(Integer.parseInt(parts[0])==i && Integer.parseInt(parts[1])==j) mina = true;
                 }
                 caselles[i][j] = new Casella(i, j, false, false, mina);
+            }
+        }
+        
+        for(int i = 0; i < nF; ++i) {
+            for(int j = 0; j < nC; ++j) {
+                int numMines=0;                
+                if(i<nF-1 && j<nC-1 && caselles[i+1][j+1].getTeMina()) ++numMines;
+                if(i<nF-1 && caselles[i+1][j].getTeMina()) ++numMines;
+                if(i<nF-1 && j>0 && caselles[i+1][j-1].getTeMina()) ++numMines;
+                if(j<nC-1 && caselles[i][j+1].getTeMina()) ++numMines;
+                if(j>0 && caselles[i][j-1].getTeMina()) ++numMines;
+                if(i>0 && j<nC-1 && caselles[i-1][j+1].getTeMina()) ++numMines;
+                if(i>0 && caselles[i-1][j].getTeMina()) ++numMines;
+                if(i>0 && j>0 && caselles[i-1][j-1].getTeMina()) ++numMines;
+                caselles[i][j].setNumMines(numMines);
             }
         }
     }
@@ -140,11 +159,38 @@ public class Partida {
     }
     
     
+    public void marcarCasella(int i, int j) throws IOException{
+        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
+        if(caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella ja esta marcada");
+        caselles[i][j].setEstaMarcada(true);
+    }
+    
+    public void desmarcarCasella(int i, int j) throws IOException{
+        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
+        if(!caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella no esta marcada");
+        caselles[i][j].setEstaMarcada(false);
+    }
+    
+    public void descobrirCasella(int i, int j) throws IOException{
+        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
+        if(caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella esta marcada");
+        caselles[i][j].setEstaDescoberta(true);
+        if(caselles[i][j].getTeMina()) setEstaAcabada(true);
+    }
+    
+    
+    
+    
     public void mostrarPartida() {
         for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) {
             for(int j = 0; j < nivell.getNombreCasellesxColumna(); ++j) {
                 if(caselles[i][j].getTeMina()) System.out.printf("* ");
-                else System.out.printf(". ");
+                else {
+                    if(caselles[i][j].getEstaDescoberta()) System.out.printf("[");
+                    System.out.printf("%d", caselles[i][j].getNumMines());
+                    if(caselles[i][j].getEstaDescoberta()) System.out.printf("]");
+                    System.out.printf(" ");
+                }
             }
             System.out.println("");
         }

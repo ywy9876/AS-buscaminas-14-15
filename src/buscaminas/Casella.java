@@ -15,6 +15,7 @@ public class Casella {
     private boolean estaDescoberta;
     private boolean estaMarcada;
     private final boolean teMina;
+    private int numMines;
     
     public Casella(int nF, int nC, boolean desc, boolean marc, boolean mina) {
         numFila = nF;
@@ -22,6 +23,7 @@ public class Casella {
         estaDescoberta = desc;
         estaMarcada = marc;
         teMina = mina;
+        numMines = -1;
     }
     
     /**
@@ -57,5 +59,19 @@ public class Casella {
      */
     public boolean getTeMina() {
         return teMina;
+    }
+    
+    /**
+     * @param numMines the numMines
+     */
+    public void setNumMines(int numMines) {
+        this.numMines = numMines;
+    }
+    
+    /**
+     * @return the numMines
+     */
+    public int getNumMines() {
+        return numMines;
     }
 }
