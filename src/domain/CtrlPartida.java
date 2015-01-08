@@ -17,14 +17,16 @@ public class CtrlPartida {
     private Nivell n;
     
     public CtrlPartida() {
-        
+        p = null;
+        n = null;
     }
     
-    public void createPartida(String nivell) {
-        //cargarNivell amb nom nivell
+    public void createPartida(String nivell) throws IOException{
+        //cargarNivell amb nom nivell, si no existeix throw exception
         n = new Nivell("Principiant", 8, 8, 10);
         p = new Partida(1);
         p.setNivell(n);
+        p.initPartida();
     }
     
     public ArrayList<String> getNomNivells() {
@@ -45,7 +47,9 @@ public class CtrlPartida {
         p.descobrirCasella(i, j);
     }
     
-    public void mostrarPartida() {
-        p.mostrarPartida();
+    public void mostrarPartida() throws IOException{
+        if(p == null) throw new IOException("No hi ha una partida creada");
+        if(p.isEstaAcabada()) throw new IOException("La partida ha acabat!");
+        else p.mostrarPartida();
     }
 }
