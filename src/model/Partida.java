@@ -159,27 +159,30 @@ public class Partida {
     }
     
     
-    public void marcarCasella(int i, int j) throws IOException{
-        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
-        if(caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella ja esta marcada");
+    public void marcarCasella(int i, int j) {
         caselles[i][j].setEstaMarcada(true);
     }
     
-    public void desmarcarCasella(int i, int j) throws IOException{
-        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
-        if(!caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella no esta marcada");
+    public void desmarcarCasella(int i, int j) {
         caselles[i][j].setEstaMarcada(false);
     }
     
-    public void descobrirCasella(int i, int j) throws IOException{
-        if(caselles[i][j].getEstaDescoberta()) throw new IOException("Aquesta casella ja esta descoberta");
-        if(caselles[i][j].getEstaMarcada()) throw new IOException("Aquesta casella esta marcada");
+    public String descobrirCasella(int i, int j) {
+        String ret = String.valueOf(caselles[i][j].getNumMines());
         caselles[i][j].setEstaDescoberta(true);
-        if(caselles[i][j].getTeMina()) setEstaAcabada(true);
+        if(caselles[i][j].getTeMina()) {
+        	setEstaAcabada(true);
+        	ret = "X";
+        }
+        return ret;
     }
     
     public Casella[][] getCaselles() {
     	return caselles;
+    }
+    
+    public boolean getMarcada(int i, int j) {
+    	return caselles[i][j].getEstaMarcada();
     }
     
     

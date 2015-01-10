@@ -89,6 +89,9 @@ public class CtrlJugarPartidaPresentacio {
 		
 		System.out.println("Partida creada!");
 		
+		jpuc.mostrarPartida();
+		
+		
 		
 	}
 	
@@ -107,15 +110,20 @@ public class CtrlJugarPartidaPresentacio {
 	 * @param pos
 	 * @param lletra
 	 */
-	/*public void PrCheck(int pos, String lletra) {
-		PlayLetterInfoTuple playInfo = jpuc.playLetter(pos, lletra.charAt(0));
+	public String PrCheck(int i, int j, int opt) throws IOException {
+		/*PlayLetterInfoTuple playInfo = jpuc.playLetter(pos, lletra.charAt(0));
 		jpv.markLetterBox(playInfo.success);
 		if (playInfo.isFinished) {
 			jpv.finishMatch(playInfo.isWon);
 		}
 		jpv.updateCurrentScoring(playInfo.currentScore);
-		jpv.updateErrors(playInfo.numErrors);
-	}*/
+		jpv.updateErrors(playInfo.numErrors);*/
+		String ret;
+		if(opt == 1)ret = jpuc.descobrirCasella(i, j);
+		else ret = jpuc.marcarCasella(i, j);
+		return ret;
+		
+	}
         
 		
 	/**

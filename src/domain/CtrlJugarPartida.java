@@ -57,22 +57,29 @@ public class CtrlJugarPartida {
         return nomNivells;
     }
     
-    public void marcarCasella(int i, int j) throws IOException{
-        p.marcarCasella(i, j);
+    public String marcarCasella(int i, int j) {
+    	String ret;
+    	if(p.getMarcada(i,j)) {
+    		p.desmarcarCasella(i, j);
+    		ret = "D";
+    	}
+    	else {
+    		p.marcarCasella(i, j);
+    		ret = "M";
+    	}
+    	return ret;
     }
     
     public void desmarcarCasella(int i, int j) throws IOException{
         p.desmarcarCasella(i, j);
     }
     
-    public void descobrirCasella(int i, int j) throws IOException{
-        p.descobrirCasella(i, j);
+    public String descobrirCasella(int i, int j) throws IOException{
+        return p.descobrirCasella(i, j);
     }
     
-    public void mostrarPartida() throws IOException{
-        if(p == null) throw new IOException("No hi ha una partida creada");
-        if(p.isEstaAcabada()) throw new IOException("La partida ha acabat!");
-        else p.mostrarPartida();
+    public void mostrarPartida() {
+        p.mostrarPartida();
     }
     
     public Casella[][] getCaselles() {

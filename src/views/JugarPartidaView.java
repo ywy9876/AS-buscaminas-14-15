@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -57,6 +62,8 @@ public class JugarPartidaView extends JFrame {
 	private boolean matchWon;
 	private int numLetters;
 	private int maxErrors;
+	private JButton but[][];
+	JLabel lb_nivell;
 	
 	public void disableLetterBoxes (int pos) {
 		for (int i=0; i<numLetters; ++i) {
@@ -67,8 +74,9 @@ public class JugarPartidaView extends JFrame {
 	}
 	
 	public void buildBoard(Casella[][] caselles, Nivell n) {
-		int nF = n.getNombreCasellesxFila();
-		int nC = n.getNombreCasellesxColumna();
+		lb_nivell.setText(n.getNom());
+		final int nF = n.getNombreCasellesxFila();
+		final int nC = n.getNombreCasellesxColumna();
 		int sizeX, sizeY;
 		if(nC <= 10) sizeX = sizeY = 250;
 		else if (nC <= 16) sizeX = sizeY = 300;
@@ -77,32 +85,65 @@ public class JugarPartidaView extends JFrame {
 			sizeY = 300;
 		}
 		
-		
-		JButton but[][] = new JButton[nF][nC];
+		but = new JButton[nF][nC];
 		JPanel gridPanel = new JPanel();
 		Dimension size = new Dimension(sizeX,sizeY);
 		
 		gridPanel.setLayout(new GridLayout(nF, nC));
-		gridPanel.setBackground(Color.blue);
 		gridPanel.setPreferredSize(size);
 		gridPanel.setMaximumSize(size);
 		gridPanel.setMinimumSize(size);
 		gridPanel.setSize(size);
 		gridPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=1;
+		c.gridy=2;
+		c.gridheight=GridBagConstraints.RELATIVE;
 		for(int i = 0; i < nF; ++i)
 			for(int j = 0; j < nC; ++j) {
-				but[i][j] =  new JButton(String.valueOf(caselles[i][j].getNumMines()));
-				but[i][j].addActionListener(new ActionListener() {
+				but[i][j] =  new JButton("");
+				but[i][j].addMouseListener(new MouseListener() {
 					@Override
-					public void actionPerformed(ActionEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						JButton b = (JButton) e.getSource();
-				    	 b.setText("X");
-				    	 System.out.println("press");
+						for(int i = 0; i < nF; ++i) {
+							for(int j = 0; j < nC; ++j){
+								if(but[i][j].equals(b)) {
+									System.out.println("i="+i+" j="+j);
+									try {
+										if(SwingUtilities.isRightMouseButton(e)) {
+											String c = pmc.PrCheck(i, j, 2);
+											if(c.equals("D")) b.setText("");
+											else b.setText(c);
+										}
+										else if (!b.getText().equals("M")){
+											String c = pmc.PrCheck(i, j, 1);
+											b.setText(c);
+											b.setEnabled(false);
+										}
+										
+									} catch (IOException eX){
+										
+									}
+								}
+							}
+						}
 					}
+					
+					@Override
+					public void mousePressed(MouseEvent e){}
+					@Override
+					public void mouseExited(MouseEvent e) {}
+					@Override
+					public void mouseEntered(MouseEvent e) {}
+					@Override
+					public void mouseClicked(MouseEvent e) {}
 				});
+				
 				gridPanel.add(but[i][j]);
 			}
-		matchPanel.add(gridPanel);
+		matchPanel.add(gridPanel,c);
 		
 		
 		
@@ -196,51 +237,78 @@ public class JugarPartidaView extends JFrame {
 			setLayout(new GridBagLayout());
 			
 			
-			/*
+			JButton btn_back = new JButton("Back");
+			GridBagConstraints c_back = new GridBagConstraints();
+			c_back.gridy=0;
+			c_back.gridx=0;
+			
+			add(btn_back, c_back);
+			
+			lb_nivell = new JLabel("NIVELL");
+			lb_nivell.setFont(new java.awt.Font("Arial",1,18));
+			GridBagConstraints c_niv = new GridBagConstraints();
+			c_niv.gridy=0;
+			c_niv.gridx=1;
+			add(lb_nivell, c_niv);
+			
+			JLabel lb_tirades = new JLabel("Tirades:");
+			GridBagConstraints c4 = new GridBagConstraints();
+			c4.gridy=0;
+			c4.gridx=3;
+			add(lb_tirades, c4);
+			
+			JLabel lb_temps = new JLabel("Temps:");
+			c4.gridy=1;
+			add(lb_temps, c4);
+			
 			// marcador puntucio actual
-			lb_currentPoints = new JLabel("Punts:",SwingConstants.CENTER);
-			lb_currentPoints.setBounds(102, 62, 172, 35);
-			lb_currentPoints.setFont(new java.awt.Font("Tahoma",1,18));
-			lb_currentPoints.setBackground( new Color( 51, 102, 255 ) );
-			lb_currentPoints.setForeground(Color.white);
-			lb_currentPoints.setOpaque(true);
-			add(lb_currentPoints);		
+//			lb_currentPoints = new JLabel("Punts:",SwingConstants.CENTER);
+//			lb_currentPoints.setBounds(102, 62, 172, 35);
+//			lb_currentPoints.setFont(new java.awt.Font("Tahoma",1,18));
+//			lb_currentPoints.setBackground( new Color( 51, 102, 255 ) );
+//			lb_currentPoints.setForeground(Color.white);
+//			lb_currentPoints.setOpaque(true);
+//			GridBagConstraints c = new GridBagConstraints();
+//			c.anchor = GridBagConstraints.PAGE_START;
+//			c.fill = GridBagConstraints.HORIZONTAL;
+//			c.gridy=0;
+//			add(lb_currentPoints,c);		
+//			
+//			//marcador errors
+//			lb_ErrorCounter = new JLabel("Errors 0 de X:",SwingConstants.CENTER);
+//			lb_ErrorCounter.setBounds(323, 62, 172, 35);
+//			lb_ErrorCounter.setFont(new java.awt.Font("Tahoma",1,18));
+//			//lbErrors.setFont(boldfont);
+//			lb_ErrorCounter.setBackground(Color.gray);
+//			lb_ErrorCounter.setForeground(Color.white);
+//			lb_ErrorCounter.setOpaque(true);
+//			add(lb_ErrorCounter);
+//			
+//			//area missatges
+//			lb_messagesMatchPanel = new JLabel("",SwingConstants.CENTER);
+//			lb_messagesMatchPanel.setBounds(100, 240, 400, 30);
+//			lb_messagesMatchPanel.setHorizontalAlignment(SwingConstants.CENTER);
+//			lb_messagesMatchPanel.setVerticalAlignment(SwingConstants.CENTER);
+//			lb_messagesMatchPanel.setFont(new java.awt.Font("Tahoma",1,15));
+//			add(lb_messagesMatchPanel);
+//			
+//			//lbPuntsEncert
+//			lb_pointsPerCorrectLetter = new JLabel("+10",SwingConstants.CENTER);
+//			lb_pointsPerCorrectLetter.setBounds(175, 115, 250, 25);
+//			lb_pointsPerCorrectLetter.setFont(new java.awt.Font("Tahoma",1,14));
+//			lb_pointsPerCorrectLetter.setForeground( new Color(0,133,0) );
+//			lb_pointsPerCorrectLetter.setOpaque(true);
+//			add(lb_pointsPerCorrectLetter);
+//			
+//			lb_PointsPerError = new JLabel("-5",SwingConstants.CENTER);
+//			lb_PointsPerError.setBounds(175, 140, 250, 25);
+//			lb_PointsPerError.setFont(new java.awt.Font("Tahoma",1,14));
+//			//lb_PuntsError.setFont(boldfont);
+//			//lb_PuntsError.setBackground(Color.red);
+//			lb_PointsPerError.setForeground(Color.red);
+//			lb_PointsPerError.setOpaque(true);
+//			add(lb_PointsPerError);
 			
-			//marcador errors
-			lb_ErrorCounter = new JLabel("Errors 0 de X:",SwingConstants.CENTER);
-			lb_ErrorCounter.setBounds(323, 62, 172, 35);
-			lb_ErrorCounter.setFont(new java.awt.Font("Tahoma",1,18));
-			//lbErrors.setFont(boldfont);
-			lb_ErrorCounter.setBackground(Color.gray);
-			lb_ErrorCounter.setForeground(Color.white);
-			lb_ErrorCounter.setOpaque(true);
-			add(lb_ErrorCounter);
-			
-			//area missatges
-			lb_messagesMatchPanel = new JLabel("",SwingConstants.CENTER);
-			lb_messagesMatchPanel.setBounds(100, 240, 400, 30);
-			lb_messagesMatchPanel.setHorizontalAlignment(SwingConstants.CENTER);
-			lb_messagesMatchPanel.setVerticalAlignment(SwingConstants.CENTER);
-			lb_messagesMatchPanel.setFont(new java.awt.Font("Tahoma",1,15));
-			add(lb_messagesMatchPanel);
-			
-			//lbPuntsEncert
-			lb_pointsPerCorrectLetter = new JLabel("+10",SwingConstants.CENTER);
-			lb_pointsPerCorrectLetter.setBounds(175, 115, 250, 25);
-			lb_pointsPerCorrectLetter.setFont(new java.awt.Font("Tahoma",1,14));
-			lb_pointsPerCorrectLetter.setForeground( new Color(0,133,0) );
-			lb_pointsPerCorrectLetter.setOpaque(true);
-			add(lb_pointsPerCorrectLetter);
-			
-			lb_PointsPerError = new JLabel("-5",SwingConstants.CENTER);
-			lb_PointsPerError.setBounds(175, 140, 250, 25);
-			lb_PointsPerError.setFont(new java.awt.Font("Tahoma",1,14));
-			//lb_PuntsError.setFont(boldfont);
-			//lb_PuntsError.setBackground(Color.red);
-			lb_PointsPerError.setForeground(Color.red);
-			lb_PointsPerError.setOpaque(true);
-			add(lb_PointsPerError);
-				
 			//boto aturar partida
 			btn_stopMatch = new JButton("Aturar");
 			btn_stopMatch.addActionListener(new ActionListener() {
@@ -258,9 +326,14 @@ public class JugarPartidaView extends JFrame {
 			btn_stopMatch.setBorder( BorderFactory.createLineBorder( new Color(255,103,1), 2 ));
 			
 			btn_stopMatch.setVisible(true);
-			add(btn_stopMatch);
+			GridBagConstraints c2 = new GridBagConstraints();
+			//c2.fill = GridBagConstraints.HORIZONTAL;
+			c2.gridy=3;
+			c2.gridx=0;
 			
+			add(btn_stopMatch, c2);
 			
+			/*
 			//boto comprovar
 			btn_CheckLetter = new JButton("Comprovar");
 			btn_CheckLetter.addActionListener(new ActionListener() {
