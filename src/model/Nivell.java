@@ -36,6 +36,13 @@ public class Nivell implements Serializable {
     
     public Nivell(){}
     
+    public Nivell(Nivell niv) {
+    	this.nom = niv.getNom();
+    	this.nombreCasellesxColumna = niv.getNombreCasellesxColumna();
+    	this.nombreCasellesxFila = niv.getNombreCasellesxFila();
+    	this.nombreMines = niv.getNombreMines();
+    }
+    
     public Nivell(String nom, int nombreCasellesxFila, int nombreCasellesxColumna, int nombreMines ) {
         this.nom = nom;
         this.nombreCasellesxFila = nombreCasellesxFila;

@@ -2,7 +2,10 @@ package views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -14,6 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +28,9 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import model.Casella;
+import model.Nivell;
+
 //import edu.upc.fib.wordguess.domain.model.Category;
 //import edu.upc.fib.wordguess.util.Log;
 
@@ -31,10 +38,10 @@ public class JugarPartidaView extends JFrame {
 	
 	CtrlJugarPartidaPresentacio pmc;
 	JLogin login;
-	JSelcat categoriesSelectionPanel;
+	JSelniv categoriesSelectionPanel;
 	JPartidaEnJoc matchPanel;
 	JTextField [] letters;
-	JComboBox<String> cBox_Categories;
+	JComboBox<String> cBox_Nivells;
 	JLabel lb_messagesLoginPanel;
 	JLabel lb_messagesMatchPanel;
 	JLabel lb_messagesCategoriesPanel;
@@ -59,46 +66,49 @@ public class JugarPartidaView extends JFrame {
 		}
 	}
 	
-	public void buildWord(int numLetters) {
-		this.numLetters = numLetters;
-		letters = new JTextField[numLetters];
-		
-		int x = numLetters/2;
-		x = 300 - (x*50); // meitat del panell - la meitat del tamany de la paraula
-		if( (numLetters % 2) != 0 )
-			x = x-25; //si es imparell desplaco mitja
-		
-		for(int i=0;i<numLetters;i++) {
-			letters[i]= new JTextField();
-			String pos = Integer.toString(i);
-			letters[i].setText("");
-			letters[i].setName(pos);
-			letters[i].setBounds(x,180,45,45);
-			letters[i].setHorizontalAlignment(JTextField.CENTER);
-			letters[i].setBorder( BorderFactory.createLineBorder( new Color(0,0,0), 1 ));
-			letters[i].setFont(new java.awt.Font("Tahoma",1,20));
-			letters[i].addKeyListener(new KeyAdapter() {
-			      public void keyReleased(KeyEvent e) {
-
-			      }
-
-			      public void keyTyped(KeyEvent e) {
-			    	  JTextField letterBox = (JTextField) e.getSource();
-			    	  String pos = letterBox.getName();
-			  		  int posint = Integer.parseInt(pos);
-			  		  index=posint;
-			  		  disableLetterBoxes(index);
-			  		  String lletra = letters[posint].getText();
-			    	  if(letterBox.getText().length()==1) e.consume();	
-			      }
-
-			      public void keyPressed(KeyEvent e) {
-			    	  
-			      }
-		    });
-			matchPanel.add(letters[i]);//adiciono al contentpane
-			x=x+50;
+	public void buildBoard(Casella[][] caselles, Nivell n) {
+		int nF = n.getNombreCasellesxFila();
+		int nC = n.getNombreCasellesxColumna();
+		int sizeX, sizeY;
+		if(nC <= 10) sizeX = sizeY = 250;
+		else if (nC <= 16) sizeX = sizeY = 300;
+		else {
+			sizeX = 500;
+			sizeY = 300;
 		}
+		
+		
+		JButton but[][] = new JButton[nF][nC];
+		JPanel gridPanel = new JPanel();
+		Dimension size = new Dimension(sizeX,sizeY);
+		
+		gridPanel.setLayout(new GridLayout(nF, nC));
+		gridPanel.setBackground(Color.blue);
+		gridPanel.setPreferredSize(size);
+		gridPanel.setMaximumSize(size);
+		gridPanel.setMinimumSize(size);
+		gridPanel.setSize(size);
+		gridPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		for(int i = 0; i < nF; ++i)
+			for(int j = 0; j < nC; ++j) {
+				but[i][j] =  new JButton(String.valueOf(caselles[i][j].getNumMines()));
+				but[i][j].addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JButton b = (JButton) e.getSource();
+				    	 b.setText("X");
+				    	 System.out.println("press");
+					}
+				});
+				gridPanel.add(but[i][j]);
+			}
+		matchPanel.add(gridPanel);
+		
+		
+		
+		gridPanel.revalidate();
+		gridPanel.repaint();
+		
 	}
 	
 	public class JLogin extends JPanel {
@@ -174,19 +184,19 @@ public class JugarPartidaView extends JFrame {
 	
 	
 	public class JPartidaEnJoc extends JPanel {
-	   /**Pantalla corresponent a la partida que s'est� jugant
+	   /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+	/**Pantalla corresponent a la partida que s'est� jugant
 		* Mostra puntuaci� actual, num errors i les caselles per tal d'endevinar la paraula, 
 		* a m�s apareixar�n els botons: comprovar, aturar partida i tancar partida*/
-	/*	public JPartidaEnJoc() {
-			setLayout(null);
+		public JPartidaEnJoc() {
+			setLayout(new GridBagLayout());
 			
-			//label imatge logo
-			JLabel lb_logo = new JLabel("");
-			lb_logo.setBounds(-4, -2, 87, 87);
-			ImageIcon ImgIcon = new ImageIcon(getClass().getClassLoader().getResource("logoWG.png"));
-			lb_logo.setIcon(ImgIcon);
-			add(lb_logo);
 			
+			/*
 			// marcador puntucio actual
 			lb_currentPoints = new JLabel("Punts:",SwingConstants.CENTER);
 			lb_currentPoints.setBounds(102, 62, 172, 35);
@@ -288,30 +298,35 @@ public class JugarPartidaView extends JFrame {
 					pmc.PrFinishGame();
 				}
 			});
-			add(btn_finishMatch);
-		}*/
+			add(btn_finishMatch);*/
+		}
 	}
 	
-	public class JSelcat extends JPanel {
+	public class JSelniv extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		/**Pantalla corresponent a seleccionar una categoria de paraules per tal de que la partida
 		 *sigui creada amb una paraula random de les corresponents a la categoria escollida*/
-		public JSelcat() {
+		public JSelniv() {
 			setLayout(null);
 			
 			
 			//label seleccionar categoria
-			JLabel lb_Selcat = new JLabel("Tria una categoria:");
+			JLabel lb_Selcat = new JLabel("Tria una nivell:");
 			lb_Selcat.setFont(new java.awt.Font("Tahoma",0,20));
 			lb_Selcat.setHorizontalAlignment(SwingConstants.CENTER);
 			lb_Selcat.setBounds(200, 60, 200, 30);
 			add(lb_Selcat);
 			
 			//combobox
-			cBox_Categories = new JComboBox<String>();
-			cBox_Categories.setBorder( BorderFactory.createLineBorder( new Color(160, 160, 160), 2 ));
-			cBox_Categories.setFont(new java.awt.Font("Tahoma",1, 14));
-			cBox_Categories.setBounds(220, 120, 160, 30);
-			add(cBox_Categories);
+			cBox_Nivells = new JComboBox<String>();
+			cBox_Nivells.setBorder( BorderFactory.createLineBorder( new Color(160, 160, 160), 2 ));
+			cBox_Nivells.setFont(new java.awt.Font("Tahoma",1, 14));
+			cBox_Nivells.setBounds(220, 120, 160, 30);
+			add(cBox_Nivells);
 			
 			//label missatge
 			lb_messagesCategoriesPanel = new JLabel("",JLabel.CENTER);
@@ -340,9 +355,9 @@ public class JugarPartidaView extends JFrame {
 			btn_startMatch = new JButton("Jugar");
 			btn_startMatch.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					String cat = String.valueOf(cBox_Categories.getSelectedItem());
+					String cat = String.valueOf(cBox_Nivells.getSelectedItem());
 					//try {
-						//pmc.PrStartMatch(cat);
+						pmc.PrStartMatch(cat);
 						setContentPane(matchPanel);
 						
 					//} catch (UserIsNotPlayerException e) {
@@ -366,7 +381,7 @@ public class JugarPartidaView extends JFrame {
 	public JugarPartidaView(CtrlJugarPartidaPresentacio jpc) {
 		pmc = jpc;
 		login = new JLogin();
-		categoriesSelectionPanel = new JSelcat();
+		categoriesSelectionPanel = new JSelniv();
 		matchPanel = new JPartidaEnJoc();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600 , 400);
@@ -375,9 +390,9 @@ public class JugarPartidaView extends JFrame {
 	}
 	
         public void loadNivells(ArrayList<String> nivells) {
-                cBox_Categories.removeAllItems();
+                cBox_Nivells.removeAllItems();
                 for (String st : nivells) {
-                	cBox_Categories.addItem(st);
+                	cBox_Nivells.addItem(st);
                 }
         }
 	

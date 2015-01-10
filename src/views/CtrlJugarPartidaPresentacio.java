@@ -67,7 +67,7 @@ public class CtrlJugarPartidaPresentacio {
 		ArrayList<String> nivells = jpuc.getNomNivells();
 		jpv.loadNivells(nivells);
 		if (nivells.isEmpty()) {
-			jpv.showMessage("No hi ha Categories", 1);
+			jpv.showMessage("No hi ha Nivells", 1);
 		}
 		return logged;
 	}
@@ -82,19 +82,15 @@ public class CtrlJugarPartidaPresentacio {
 	 * @param categoryName
 	 * @throws UserIsNotPlayerException 
 	 */
-	/*public void PrStartMatch(String categoryName) throws UserIsNotPlayerException {
-		MatchInfoTuple matchInfo = null;
-		try {
-			matchInfo = jpuc.createMatch(categoryName);
-		} catch (PlayerNotExistsException e) {
-			throw new UserIsNotPlayerException();
-		}		
-		idPartida = matchInfo.matchId;
-		jpv.loadPointsPer(matchInfo.scoreOnSuccess, matchInfo.scoreOnError);
-		jpv.updateCurrentScoring(matchInfo.currentScore);
-		jpv.updateErrorCount(0, matchInfo.maximumErrorCount);
-		jpv.buildWord(jpuc.getMatchWord().length());
-	}*/
+	public void PrStartMatch(String nivell) {
+	
+		Nivell n = jpuc.createPartida(nivell);
+		jpv.buildBoard(jpuc.getCaselles(), n);
+		
+		System.out.println("Partida creada!");
+		
+		
+	}
 	
 	/**
 	 * para la partida, retornara a la pantalla de seleccio de categories

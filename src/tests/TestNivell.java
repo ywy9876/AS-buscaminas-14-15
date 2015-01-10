@@ -35,7 +35,7 @@ public class TestNivell {
     }
  
     public static void createNivell(Session session) {
-        Nivell niv = new Nivell("Avançat", 100, 100, 50); 
+        Nivell niv = new Nivell("Fácil", 10, 10, 20); 
  
         session.save(niv);
     }

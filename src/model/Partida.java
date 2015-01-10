@@ -178,7 +178,9 @@ public class Partida {
         if(caselles[i][j].getTeMina()) setEstaAcabada(true);
     }
     
-    
+    public Casella[][] getCaselles() {
+    	return caselles;
+    }
     
     
     public void mostrarPartida() {

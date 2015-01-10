@@ -25,12 +25,14 @@ public class CtrlJugarPartida {
         n = null;
     }
     
-    public void createPartida(String nivell) throws IOException{
+    public Nivell createPartida(String nivell) {
         //cargarNivell amb nom nivell, si no existeix throw exception
-        n = new Nivell("Principiant", 8, 8, 10);
+    	PostgresNivell pn = new PostgresNivell();
+    	n = new Nivell(pn.getNivell(nivell));
         p = new Partida(1);
         p.setNivell(n);
         p.initPartida();
+        return n;
     }
     
     public boolean authenticate(String username, String pass) throws IOException {
@@ -71,6 +73,10 @@ public class CtrlJugarPartida {
         if(p == null) throw new IOException("No hi ha una partida creada");
         if(p.isEstaAcabada()) throw new IOException("La partida ha acabat!");
         else p.mostrarPartida();
+    }
+    
+    public Casella[][] getCaselles() {
+    	return p.getCaselles();
     }
     
     
