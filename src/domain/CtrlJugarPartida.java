@@ -7,6 +7,7 @@ package domain;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import model.*;
 import postgres.*;
@@ -19,6 +20,7 @@ public class CtrlJugarPartida {
     private String username;
     private Partida p;
     private Nivell n;
+    private boolean[][] mark;
     
     public CtrlJugarPartida() {
         p = null;
@@ -74,8 +76,51 @@ public class CtrlJugarPartida {
         p.desmarcarCasella(i, j);
     }
     
-    public String descobrirCasella(int i, int j) throws IOException{
-        return p.descobrirCasella(i, j);
+    public void descobrirCasellaRec(int i, int j) {
+    	Casella c = p.getCasella(i, j);
+    	mark[i][j] = true;
+    	if(!c.getTeMina() && c.getNumMines()==0) {
+    		c.setEstaDescoberta(true);
+    		int nF = n.getNombreCasellesxFila();
+    		int nC = n.getNombreCasellesxColumna();
+    		
+    		if(i+1<nF && j+1<nC && !mark[i+1][j+1]) descobrirCasellaRec(i+1,j+1);
+            if(i+1<nF && !mark[i+1][j]) descobrirCasellaRec(i+1,j);
+            if(i+1<nF && j-1>-1 && !mark[i+1][j-1]) descobrirCasellaRec(i+1,j-1);
+            if(j+1<nC && !mark[i][j+1]) descobrirCasellaRec(i,j+1);
+            if(j-1>-1 && !mark[i][j-1]) descobrirCasellaRec(i,j-1);
+            if(i-1>-1 && j+1<nC && !mark[i-1][j+1]) descobrirCasellaRec(i-1,j+1);
+            if(i-1>-1 && !mark[i-1][j]) descobrirCasellaRec(i-1,j);
+            if(i-1>-1 && j-1>-1 && !mark[i-1][j-1]) descobrirCasellaRec(i-1,j-1);
+    	}
+    }
+    
+    public void descobrirCasella(int i, int j) throws IOException{
+    	Casella c = p.getCasella(i, j);
+    	if(c.getEstaDescoberta()) throw new IOException("Casella ja descoberta");
+    	if(c.getEstaMarcada()) throw new IOException("Casella ja marcada");
+    	int numMines = c.getNumMines();
+    	boolean teMina = c.getTeMina();
+    	if(numMines==0 && !teMina) {
+    		mark = new boolean[n.getNombreCasellesxFila()][n.getNombreCasellesxColumna()];
+    		for(boolean[] b : mark) Arrays.fill(b, false);
+    		descobrirCasellaRec(i,j);
+    	}
+    	else {
+    		c.setEstaDescoberta(true);
+    	}
+    	p.setNombreTirades(p.getNombreTirades()+1);
+    }
+    
+    public int checkCasella(int i, int j) {
+    	Casella[][] cas = p.getCaselles();
+    	if(cas[i][j].getEstaMarcada()) return -2;
+    	else {
+    		if(cas[i][j].getEstaDescoberta() && !cas[i][j].getTeMina()) return cas[i][j].getNumMines();
+    		else if(cas[i][j].getEstaDescoberta() && cas[i][j].getTeMina()) return -1;
+    		else return -3;
+    	}
+    	
     }
     
     public void mostrarPartida() {
@@ -86,7 +131,9 @@ public class CtrlJugarPartida {
     	return p.getCaselles();
     }
     
-    
+    public int getNombreTirades() {
+    	return p.getNombreTirades();
+    }
     
     /**
 	 * 

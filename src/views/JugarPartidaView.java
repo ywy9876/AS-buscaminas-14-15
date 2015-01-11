@@ -29,6 +29,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -39,7 +40,14 @@ import model.Nivell;
 //import edu.upc.fib.wordguess.domain.model.Category;
 //import edu.upc.fib.wordguess.util.Log;
 
+
 public class JugarPartidaView extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+	
+	private static final int MINA = -1;
+	private static final int MARCADA = -2;
+	private static final int BLANC = -3;
 	
 	CtrlJugarPartidaPresentacio pmc;
 	JLogin login;
@@ -63,20 +71,49 @@ public class JugarPartidaView extends JFrame {
 	private int numLetters;
 	private int maxErrors;
 	private JButton but[][];
+	JPanel gridPanel = new JPanel();
 	JLabel lb_nivell;
+	JLabel tir = new JLabel("0");
+	JLabel temps = new JLabel("0");
+	private int nF;
+	private int nC;
 	
-	public void disableLetterBoxes (int pos) {
-		for (int i=0; i<numLetters; ++i) {
-			if (i!=pos) {
-				letters[i].setEnabled(false);
-			}
+	
+	ActionListener updateTimerLabel = new ActionListener() {
+		public void actionPerformed (ActionEvent e){
+			int t = Integer.parseInt(temps.getText());
+			temps.setText(String.valueOf(t+1));
 		}
+	};
+	
+	
+	public void updateBoard(Casella[][] caselles) {
+		for(int i = 0; i < nF; ++i)
+			for(int j = 0; j < nC; ++j) {
+				int val = pmc.checkCasella(i, j);
+				if(val == MARCADA) but[i][j].setText("M");
+				else if(val == BLANC) but[i][j].setText("");
+				else if(val == MINA) but[i][j].setText("X");
+				else {
+					but[i][j].setText(String.valueOf(val));
+					but[i][j].setEnabled(false);
+				}
+			}
+		
+		
+		
+		gridPanel.revalidate();
+		gridPanel.repaint();
+		
 	}
 	
+	
 	public void buildBoard(Casella[][] caselles, Nivell n) {
+		Timer timer = new Timer(1000, updateTimerLabel);
+		timer.start();
 		lb_nivell.setText(n.getNom());
-		final int nF = n.getNombreCasellesxFila();
-		final int nC = n.getNombreCasellesxColumna();
+		nF = n.getNombreCasellesxFila();
+		nC = n.getNombreCasellesxColumna();
 		int sizeX, sizeY;
 		if(nC <= 10) sizeX = sizeY = 250;
 		else if (nC <= 16) sizeX = sizeY = 300;
@@ -86,7 +123,7 @@ public class JugarPartidaView extends JFrame {
 		}
 		
 		but = new JButton[nF][nC];
-		JPanel gridPanel = new JPanel();
+		
 		Dimension size = new Dimension(sizeX,sizeY);
 		
 		gridPanel.setLayout(new GridLayout(nF, nC));
@@ -113,14 +150,10 @@ public class JugarPartidaView extends JFrame {
 									System.out.println("i="+i+" j="+j);
 									try {
 										if(SwingUtilities.isRightMouseButton(e)) {
-											String c = pmc.PrCheck(i, j, 2);
-											if(c.equals("D")) b.setText("");
-											else b.setText(c);
+											pmc.PrCheck(i, j, 2);
 										}
 										else if (!b.getText().equals("M")){
-											String c = pmc.PrCheck(i, j, 1);
-											b.setText(c);
-											b.setEnabled(false);
+											pmc.PrCheck(i, j, 1);
 										}
 										
 									} catch (IOException eX){
@@ -238,76 +271,35 @@ public class JugarPartidaView extends JFrame {
 			
 			
 			JButton btn_back = new JButton("Back");
-			GridBagConstraints c_back = new GridBagConstraints();
-			c_back.gridy=0;
-			c_back.gridx=0;
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridy=0;
+			c.gridx=0;
 			
-			add(btn_back, c_back);
+			add(btn_back, c);
 			
 			lb_nivell = new JLabel("NIVELL");
 			lb_nivell.setFont(new java.awt.Font("Arial",1,18));
-			GridBagConstraints c_niv = new GridBagConstraints();
-			c_niv.gridy=0;
-			c_niv.gridx=1;
-			add(lb_nivell, c_niv);
+			c.gridy=0;
+			c.gridx=1;
+			add(lb_nivell, c);
 			
 			JLabel lb_tirades = new JLabel("Tirades:");
-			GridBagConstraints c4 = new GridBagConstraints();
-			c4.gridy=0;
-			c4.gridx=3;
-			add(lb_tirades, c4);
+			c.gridy=0;
+			c.gridx=3;
+			add(lb_tirades, c);
+			
+			
+			c.gridx=4;
+			add(tir, c);
 			
 			JLabel lb_temps = new JLabel("Temps:");
-			c4.gridy=1;
-			add(lb_temps, c4);
+			c.gridx=3;
+			c.gridy=1;
+			add(lb_temps, c);
 			
-			// marcador puntucio actual
-//			lb_currentPoints = new JLabel("Punts:",SwingConstants.CENTER);
-//			lb_currentPoints.setBounds(102, 62, 172, 35);
-//			lb_currentPoints.setFont(new java.awt.Font("Tahoma",1,18));
-//			lb_currentPoints.setBackground( new Color( 51, 102, 255 ) );
-//			lb_currentPoints.setForeground(Color.white);
-//			lb_currentPoints.setOpaque(true);
-//			GridBagConstraints c = new GridBagConstraints();
-//			c.anchor = GridBagConstraints.PAGE_START;
-//			c.fill = GridBagConstraints.HORIZONTAL;
-//			c.gridy=0;
-//			add(lb_currentPoints,c);		
-//			
-//			//marcador errors
-//			lb_ErrorCounter = new JLabel("Errors 0 de X:",SwingConstants.CENTER);
-//			lb_ErrorCounter.setBounds(323, 62, 172, 35);
-//			lb_ErrorCounter.setFont(new java.awt.Font("Tahoma",1,18));
-//			//lbErrors.setFont(boldfont);
-//			lb_ErrorCounter.setBackground(Color.gray);
-//			lb_ErrorCounter.setForeground(Color.white);
-//			lb_ErrorCounter.setOpaque(true);
-//			add(lb_ErrorCounter);
-//			
-//			//area missatges
-//			lb_messagesMatchPanel = new JLabel("",SwingConstants.CENTER);
-//			lb_messagesMatchPanel.setBounds(100, 240, 400, 30);
-//			lb_messagesMatchPanel.setHorizontalAlignment(SwingConstants.CENTER);
-//			lb_messagesMatchPanel.setVerticalAlignment(SwingConstants.CENTER);
-//			lb_messagesMatchPanel.setFont(new java.awt.Font("Tahoma",1,15));
-//			add(lb_messagesMatchPanel);
-//			
-//			//lbPuntsEncert
-//			lb_pointsPerCorrectLetter = new JLabel("+10",SwingConstants.CENTER);
-//			lb_pointsPerCorrectLetter.setBounds(175, 115, 250, 25);
-//			lb_pointsPerCorrectLetter.setFont(new java.awt.Font("Tahoma",1,14));
-//			lb_pointsPerCorrectLetter.setForeground( new Color(0,133,0) );
-//			lb_pointsPerCorrectLetter.setOpaque(true);
-//			add(lb_pointsPerCorrectLetter);
-//			
-//			lb_PointsPerError = new JLabel("-5",SwingConstants.CENTER);
-//			lb_PointsPerError.setBounds(175, 140, 250, 25);
-//			lb_PointsPerError.setFont(new java.awt.Font("Tahoma",1,14));
-//			//lb_PuntsError.setFont(boldfont);
-//			//lb_PuntsError.setBackground(Color.red);
-//			lb_PointsPerError.setForeground(Color.red);
-//			lb_PointsPerError.setOpaque(true);
-//			add(lb_PointsPerError);
+			c.gridx=4;
+			add(temps, c);
+			
 			
 			//boto aturar partida
 			btn_stopMatch = new JButton("Aturar");
@@ -489,13 +481,8 @@ public class JugarPartidaView extends JFrame {
 		}		
 	}
 	
-	public void loadPointsPer(int en, int err) {
-		/**Mostra la quantitat de punts per error i punt per encert definit pr�viament a 
-		  l'estrat�gia que se l'hi ha aplicat a la partida*/
-		String encert = Integer.toString(en);
-		String error = Integer.toString(err);
-		lb_pointsPerCorrectLetter.setText("Punts per encert: +"+encert);
-		lb_PointsPerError.setText("Punts per fallada: "+error);
+	public void actualitzaTirades(int t) {
+		this.tir.setText(String.valueOf(t));
 	}
 	
 	public void updateCurrentScoring(int points) {

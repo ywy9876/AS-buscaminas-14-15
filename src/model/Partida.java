@@ -167,14 +167,12 @@ public class Partida {
         caselles[i][j].setEstaMarcada(false);
     }
     
-    public String descobrirCasella(int i, int j) {
-        String ret = String.valueOf(caselles[i][j].getNumMines());
+    public void descobrirCasella(int i, int j) {
         caselles[i][j].setEstaDescoberta(true);
-        if(caselles[i][j].getTeMina()) {
-        	setEstaAcabada(true);
-        	ret = "X";
-        }
-        return ret;
+    }
+    
+    public Casella getCasella(int i, int j) {
+    	return caselles[i][j];
     }
     
     public Casella[][] getCaselles() {

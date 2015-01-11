@@ -110,7 +110,7 @@ public class CtrlJugarPartidaPresentacio {
 	 * @param pos
 	 * @param lletra
 	 */
-	public String PrCheck(int i, int j, int opt) throws IOException {
+	public void PrCheck(int i, int j, int opt) throws IOException {
 		/*PlayLetterInfoTuple playInfo = jpuc.playLetter(pos, lletra.charAt(0));
 		jpv.markLetterBox(playInfo.success);
 		if (playInfo.isFinished) {
@@ -118,11 +118,16 @@ public class CtrlJugarPartidaPresentacio {
 		}
 		jpv.updateCurrentScoring(playInfo.currentScore);
 		jpv.updateErrors(playInfo.numErrors);*/
-		String ret;
-		if(opt == 1)ret = jpuc.descobrirCasella(i, j);
-		else ret = jpuc.marcarCasella(i, j);
-		return ret;
 		
+		if(opt == 1) jpuc.descobrirCasella(i, j);
+		else  jpuc.marcarCasella(i, j);
+		jpv.updateBoard(jpuc.getCaselles());
+		jpv.actualitzaTirades(jpuc.getNombreTirades());
+		
+	}
+	
+	public int checkCasella(int i, int j) {
+		return jpuc.checkCasella(i,j);
 	}
         
 		
