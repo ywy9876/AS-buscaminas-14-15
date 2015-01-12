@@ -71,9 +71,10 @@ public class JugarPartidaView extends JFrame {
 	private int numLetters;
 	private int maxErrors;
 	private JButton but[][];
-	JPanel gridPanel = new JPanel();
+	JPanel gridPanel;
 	JLabel lb_nivell;
 	JLabel tir = new JLabel("0");
+	Timer timer;
 	JLabel temps = new JLabel("0");
 	private int nF;
 	private int nC;
@@ -93,7 +94,11 @@ public class JugarPartidaView extends JFrame {
 				int val = pmc.checkCasella(i, j);
 				if(val == MARCADA) but[i][j].setText("M");
 				else if(val == BLANC) but[i][j].setText("");
-				else if(val == MINA) but[i][j].setText("X");
+				else if(val == MINA) {
+					but[i][j].setOpaque(true);
+					but[i][j].setBackground(Color.RED);
+					but[i][j].setText("X");
+				}
 				else {
 					but[i][j].setText(String.valueOf(val));
 					but[i][j].setEnabled(false);
@@ -109,7 +114,8 @@ public class JugarPartidaView extends JFrame {
 	
 	
 	public void buildBoard(Casella[][] caselles, Nivell n) {
-		Timer timer = new Timer(1000, updateTimerLabel);
+		gridPanel = new JPanel();
+		timer = new Timer(1000, updateTimerLabel);
 		timer.start();
 		lb_nivell.setText(n.getNom());
 		nF = n.getNombreCasellesxFila();
@@ -147,7 +153,6 @@ public class JugarPartidaView extends JFrame {
 						for(int i = 0; i < nF; ++i) {
 							for(int j = 0; j < nC; ++j){
 								if(but[i][j].equals(b)) {
-									System.out.println("i="+i+" j="+j);
 									try {
 										if(SwingUtilities.isRightMouseButton(e)) {
 											pmc.PrCheck(i, j, 2);
@@ -275,6 +280,17 @@ public class JugarPartidaView extends JFrame {
 			c.gridy=0;
 			c.gridx=0;
 			
+			btn_back.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					timer.stop();
+					temps.setText("0");
+					pmc.PrStopMatch();
+					setContentPane(categoriesSelectionPanel);
+					categoriesSelectionPanel.updateUI();
+					matchPanel.remove(gridPanel);
+				}
+			});
+			
 			add(btn_back, c);
 			
 			lb_nivell = new JLabel("NIVELL");
@@ -308,7 +324,8 @@ public class JugarPartidaView extends JFrame {
 					pmc.PrStopMatch();
 					setContentPane(categoriesSelectionPanel);
 					categoriesSelectionPanel.updateUI();
-					for (int i=0; i<numLetters; ++i) matchPanel.remove(letters[i]);
+					for(JButton[] buttons : but)
+						for(JButton b: buttons) matchPanel.remove(b);
 				}
 			});
 			
@@ -318,38 +335,20 @@ public class JugarPartidaView extends JFrame {
 			btn_stopMatch.setBorder( BorderFactory.createLineBorder( new Color(255,103,1), 2 ));
 			
 			btn_stopMatch.setVisible(true);
-			GridBagConstraints c2 = new GridBagConstraints();
 			//c2.fill = GridBagConstraints.HORIZONTAL;
-			c2.gridy=3;
-			c2.gridx=0;
+			c.gridy=3;
+			c.gridx=0;
 			
-			add(btn_stopMatch, c2);
+			add(btn_stopMatch, c);
 			
-			/*
-			//boto comprovar
-			btn_CheckLetter = new JButton("Comprovar");
-			btn_CheckLetter.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					  try {
-						  lb_messagesMatchPanel.setText("");
-						  //pmc.PrCheck(index,letters[index].getText());
-					  } catch(Exception e) {
-						  e.printStackTrace();
-						  if (!matchWon) {
-							  System.out.println("Saltem al catch!");
-							  lb_messagesMatchPanel.setText("La casella no pot estar buida");
-						  }
-					  }
-				}
-			});
 			
-			btn_CheckLetter.setBackground( new Color( 117, 255, 71) );
-			btn_CheckLetter.setBounds(350, 290, 100, 35);
-			btn_CheckLetter.setFont(new java.awt.Font("Tahoma", Font.BOLD, 15));
-			btn_CheckLetter.setBorder( BorderFactory.createLineBorder( new Color(0,133,0), 2 ));
+			lb_messagesMatchPanel = new JLabel("");
+			c.gridy=4;
+			c.gridx=1;
+			add(lb_messagesMatchPanel,c);
 			
-			btn_CheckLetter.setVisible(true);
-			add(btn_CheckLetter);
+			
+			
 			
 			btn_finishMatch = new JButton("Tancar");
 			btn_finishMatch.setBackground( new Color( 255, 112, 112) );
@@ -363,7 +362,9 @@ public class JugarPartidaView extends JFrame {
 					pmc.PrFinishGame();
 				}
 			});
-			add(btn_finishMatch);*/
+			c.gridy=5;
+			c.gridx=1;
+			add(btn_finishMatch,c);
 		}
 	}
 	
@@ -427,7 +428,7 @@ public class JugarPartidaView extends JFrame {
 						
 					//} catch (UserIsNotPlayerException e) {
 					//	Log.debug("PlayMatchView", "user is not player");
-						showMessage("L'usuari no es un jugador.", 1);
+						//showMessage("L'usuari no es un jugador.", 1);
 					//}
 					matchPanel.updateUI();
 				}
@@ -528,19 +529,23 @@ public class JugarPartidaView extends JFrame {
 		  la quantitat maxima d'errors permesos, en funci� d'aquestes possibilitats actualitzem
 		  els labels de missatges i l'aparici� o no, del botons corresponents a l'interface*/
 		this.matchWon = guanyada;
+		timer.stop();
+		for(JButton[] buttons : but)
+			for(JButton b : buttons) {
+				for(MouseListener l : b.getMouseListeners()) b.removeMouseListener(l);
+				b.setEnabled(false);
+			}
 		if (guanyada) {
 			lb_messagesMatchPanel.setForeground( new Color( 0, 113, 0 ) );
 			lb_messagesMatchPanel.setText("Enhorabona has guanyat la partida!");
 		}
-		else lb_messagesMatchPanel.setText("Has superat el nombre maxim d'errors");
-		btn_CheckLetter.setVisible(false);
+		else lb_messagesMatchPanel.setText("Has trobat una mina i has perdut!");
+		lb_messagesMatchPanel.repaint();
 		btn_stopMatch.setVisible(false);
 		btn_finishMatch.setVisible(true);		
 	}
-	
+	/*
 	public void markLetterBox(boolean encert) {
-		/**Pinta la casella corresponent de color verd o vermell en funci� de si en aquesta casella
-		  s'ha produ�t un encert o una fallada*/
 		if(encert) {
 			letters[index].setBackground(Color.green);
 		}
@@ -559,5 +564,5 @@ public class JugarPartidaView extends JFrame {
 			letters[i].setBorder(UIManager.getBorder("TextField.border"));
 		}
 		if(!encert) letters[index].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-	}
+	}*/
 }

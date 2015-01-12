@@ -9,7 +9,7 @@ import model.UsuariRegistrat;
 import model.MyHibernateUtil;
 
 public class PostgresUsuariRegistrat {
-	
+	@SuppressWarnings("unchecked")
 	public UsuariRegistrat getUsuari(String user) throws IOException{
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
 		

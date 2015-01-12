@@ -11,7 +11,7 @@ import model.MyHibernateUtil;
 import model.UsuariRegistrat;
 
 public class PostgresNivell {
-	
+	@SuppressWarnings("unchecked")
 	public ArrayList<Nivell> getAll() {
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
 		

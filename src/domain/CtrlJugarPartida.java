@@ -21,6 +21,8 @@ public class CtrlJugarPartida {
     private Partida p;
     private Nivell n;
     private boolean[][] mark;
+    private int casellesDescobertes;
+    private int casellesADescobrir;
     
     public CtrlJugarPartida() {
         p = null;
@@ -34,6 +36,8 @@ public class CtrlJugarPartida {
         p = new Partida(1);
         p.setNivell(n);
         p.initPartida();
+        casellesDescobertes = 0;
+        casellesADescobrir = (n.getNombreCasellesxFila()*n.getNombreCasellesxColumna())-n.getNombreMines();
         return n;
     }
     
@@ -81,6 +85,7 @@ public class CtrlJugarPartida {
     	mark[i][j] = true;
     	if(!c.getTeMina() && c.getNumMines()==0) {
     		c.setEstaDescoberta(true);
+    		++casellesDescobertes;
     		int nF = n.getNombreCasellesxFila();
     		int nC = n.getNombreCasellesxColumna();
     		
@@ -105,9 +110,19 @@ public class CtrlJugarPartida {
     		mark = new boolean[n.getNombreCasellesxFila()][n.getNombreCasellesxColumna()];
     		for(boolean[] b : mark) Arrays.fill(b, false);
     		descobrirCasellaRec(i,j);
+    		--casellesDescobertes;
     	}
     	else {
     		c.setEstaDescoberta(true);
+    	}
+    	if(teMina) p.setEstaAcabada(true);
+    	else {
+    		++casellesDescobertes;
+    		System.out.println("CasellesDescobertes: "+casellesDescobertes+ " / CasellesADescobrir: "+casellesADescobrir);
+    		if(casellesDescobertes >= casellesADescobrir) {
+    			p.setEstaAcabada(true);
+    			p.setEstaGuanyada(true);
+    		}
     	}
     	p.setNombreTirades(p.getNombreTirades()+1);
     }
@@ -121,6 +136,14 @@ public class CtrlJugarPartida {
     		else return -3;
     	}
     	
+    }
+    
+    public boolean getIsPartidaAcabada(){
+    	return p.isEstaAcabada();
+    }
+    
+    public boolean getIsPartidaGuanyada() {
+    	return p.isEstaGuanyada();
     }
     
     public void mostrarPartida() {

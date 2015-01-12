@@ -121,6 +121,10 @@ public class CtrlJugarPartidaPresentacio {
 		
 		if(opt == 1) jpuc.descobrirCasella(i, j);
 		else  jpuc.marcarCasella(i, j);
+		if(jpuc.getIsPartidaAcabada()){
+			jpv.finishMatch(jpuc.getIsPartidaGuanyada());
+		}
+		
 		jpv.updateBoard(jpuc.getCaselles());
 		jpv.actualitzaTirades(jpuc.getNombreTirades());
 		
