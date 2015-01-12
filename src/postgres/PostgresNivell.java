@@ -1,22 +1,24 @@
 package postgres;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import org.hibernate.Query;
 import org.hibernate.Session;
+
+import exception.NoHiHaNivellsException;
 
 import model.Nivell;
 import model.MyHibernateUtil;
-import model.UsuariRegistrat;
 
 public class PostgresNivell {
 	@SuppressWarnings("unchecked")
-	public ArrayList<Nivell> getAll() {
+	public ArrayList<Nivell> getAll() throws NoHiHaNivellsException{
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
 		
 		ArrayList<Nivell> nivells = (ArrayList<Nivell>) session.createQuery("from " + Nivell.class.getSimpleName()).list();
-				
+		
+		if(nivells == null){
+			session.close();
+			throw new NoHiHaNivellsException("No hi ha nivells disponibles");
+		}
 		session.close();
 		
 		return nivells;

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import exception.NoHiHaNivellsException;
+import exception.PwdIncorrecteException;
+import exception.UsernameNoExisteixException;
 import model.*;
 import postgres.*;
 /**
@@ -41,24 +44,28 @@ public class CtrlJugarPartida {
         return n;
     }
     
-    public boolean authenticate(String username, String pass) throws IOException {
+    public boolean authenticate(String username, String pass) throws UsernameNoExisteixException, PwdIncorrecteException {
     	boolean login = true;
 		this.username = username;
 		PostgresUsuariRegistrat pur = new PostgresUsuariRegistrat();
 		UsuariRegistrat ur = pur.getUsuari(username);
 		if(!ur.getPassword().equals(pass)) {
 			login = false;
-			throw new IOException ("Contrasenya inválida");
+			throw new PwdIncorrecteException("Contrasenya no válida");
 		}
 		return login;
 	}
     
     public ArrayList<String> getNomNivells() {
     	PostgresNivell pn = new PostgresNivell();
-    	ArrayList<Nivell> nivs = pn.getAll();
     	ArrayList<String> nomNivells = new ArrayList<String>();
-    	for(Nivell n : nivs) {
-    		nomNivells.add(n.getNom());
+    	try {
+    		ArrayList<Nivell> nivs = pn.getAll();
+	    	for(Nivell n : nivs) {
+	    		nomNivells.add(n.getNom());
+	    	}
+    	} catch (NoHiHaNivellsException ex) {
+    		nomNivells.add(ex.toString());
     	}
         return nomNivells;
     }

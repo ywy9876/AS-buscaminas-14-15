@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 
+
+
 /*
 import edu.upc.fib.wordguess.data.exception.PlayerNotExistsException;
 import edu.upc.fib.wordguess.data.exception.UserNotExistsException;
@@ -14,12 +16,16 @@ import edu.upc.fib.wordguess.domain.exception.InvalidPasswordException;
 import edu.upc.fib.wordguess.domain.model.Category;
 */
 import domain.*;
+import exception.PwdIncorrecteException;
+import exception.UsernameNoExisteixException;
 
 import java.util.ArrayList;
 /*
  Controlador de la capa de presentacio
  te un controlador de les vistes i el controlador de cas d'us de domini (associacions)
  */
+
+
 
 
 import model.Nivell;
@@ -60,7 +66,9 @@ public class CtrlJugarPartidaPresentacio {
 		boolean logged = false;
 		try {
 			logged = jpuc.authenticate(username, pass);
-		} catch (IOException e) {
+		} catch (UsernameNoExisteixException e) {
+			jpv.showMessage(e.toString(), 0);
+		} catch (PwdIncorrecteException e) {
 			jpv.showMessage(e.toString(), 0);
 		} 
 		
