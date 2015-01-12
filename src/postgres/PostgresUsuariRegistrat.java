@@ -7,8 +7,8 @@ import exception.UsernameNoExisteixException;
 import model.UsuariRegistrat;
 import model.MyHibernateUtil;
 
-public class PostgresUsuariRegistrat {
-	@SuppressWarnings("unchecked")
+public class PostgresUsuariRegistrat extends PostgresGeneral<UsuariRegistrat> {
+	
 	public UsuariRegistrat getUsuari(String user) throws UsernameNoExisteixException {
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
 		

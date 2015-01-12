@@ -6,8 +6,12 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Id;
 
@@ -24,11 +28,21 @@ public class UsuariRegistrat implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Id private String nom;
-    private String cognom;
-    private String username;
-    private String password;
-
+	@Id protected String nom;
+	protected String cognom;
+	protected String username;
+	protected String password;
+    
+	public UsuariRegistrat() {
+    }
+	
+	public UsuariRegistrat(String n, String c, String u, String p) {
+    	nom = n;
+    	cognom = c;
+    	username = u;
+    	password = p;
+    }
+    
     /**
      * @return the password
      */

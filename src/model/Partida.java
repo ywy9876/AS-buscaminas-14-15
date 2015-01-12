@@ -6,14 +6,27 @@
 package model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import postgres.PostgresFactory;
+import postgres.PostgresPartida;
 
 /**
  *
@@ -23,20 +36,38 @@ import javax.persistence.Table;
 @Entity
 @Table(name="partida")
 
-public class Partida {
-    @Id private int idPartida;
-    private boolean estaAcabada;
-    private boolean estaGuanyada;
-    private int nombreTirades;
+public class Partida implements Serializable {
+    private static final long serialVersionUID = 1L;
+	
+    @Id @Column private int idPartida;
+    @Column private boolean estaAcabada;
+    @Column private boolean estaGuanyada;
+    @Column private int nombreTirades;
+    @Column private int temps = 0;
+    @Column private String estrategia = "estrategia";
     
-   /*@OneToMany */private Nivell nivell;
-    private Casella[][] caselles;
+   @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="idjugador")
+    private UsuariRegistrat jugador;
+    
+   /*@OneToMany*/ @Transient private Nivell nivell1;
+   @Column private String nivell = "pppp";
+   /*//@OneToMany(mappedBy="partida", targetEntity=Casella.class)
+   //@OrderColumn(name="idPartida")
+   @ElementCollection
+   @CollectionTable(
+         name="caselles",
+         joinColumns=@JoinColumn(name="idpartida")
+   )*/
+   @Transient Casella[][] caselles;
 
     public Partida(int idPartida) {
         this.idPartida=idPartida;
         this.estaAcabada=false;
         this.estaGuanyada=false;
         this.nombreTirades=0;
+        jugador = new UsuariRegistrat("test","test","test","test");
+        
     }
     
     
@@ -44,11 +75,11 @@ public class Partida {
      * @return ArrayList<String> amb posicio de les mines
      */
     private ArrayList<String> generarMinas() {
-        int nombreMines = nivell.getNombreMines();
+        int nombreMines = nivell1.getNombreMines();
         ArrayList<Integer> f = new ArrayList<>();
-        for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) f.add(i);
+        for(int i = 0; i < nivell1.getNombreCasellesxFila(); ++i) f.add(i);
         ArrayList<Integer> c = new ArrayList<>();
-        for(int i = 0; i < nivell.getNombreCasellesxColumna(); ++i) c.add(i);
+        for(int i = 0; i < nivell1.getNombreCasellesxColumna(); ++i) c.add(i);
         int count = 0;
         ArrayList<String> minas = new ArrayList<>();
         while(count < nombreMines) {
@@ -64,8 +95,8 @@ public class Partida {
     
     
     public void initPartida() {
-        int nF = nivell.getNombreCasellesxFila();
-        int nC = nivell.getNombreCasellesxColumna();
+        int nF = nivell1.getNombreCasellesxFila();
+        int nC = nivell1.getNombreCasellesxColumna();
         this.caselles = new Casella[nF][nC];
         ArrayList<String> minas = generarMinas();
         for(int i = 0; i < nF; ++i) {
@@ -75,7 +106,7 @@ public class Partida {
                     String[] parts = st.split(" ");
                     if(Integer.parseInt(parts[0])==i && Integer.parseInt(parts[1])==j) mina = true;
                 }
-                caselles[i][j] = new Casella(i, j, false, false, mina);
+                caselles[i][j] = new Casella(idPartida, i, j, false, false, mina);
             }
         }
         
@@ -93,6 +124,11 @@ public class Partida {
                 caselles[i][j].setNumMines(numMines);
             }
         }
+        PostgresFactory pFact = PostgresFactory.getInstance();
+        PostgresPartida pPartida = pFact.getPostgresPartida();
+        try {
+        	pPartida.store(this);
+        } catch (Exception e) {System.out.println(e);}
     }
     
     /**
@@ -155,7 +191,7 @@ public class Partida {
      * @param nivell the nivell to set
      */
     public void setNivell(Nivell nivell) {
-        this.nivell = nivell;
+        this.nivell1 = nivell;
     }
     
     
@@ -185,8 +221,8 @@ public class Partida {
     
     
     public void mostrarPartida() {
-        for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) {
-            for(int j = 0; j < nivell.getNombreCasellesxColumna(); ++j) {
+        for(int i = 0; i < nivell1.getNombreCasellesxFila(); ++i) {
+            for(int j = 0; j < nivell1.getNombreCasellesxColumna(); ++j) {
                 if(caselles[i][j].getTeMina()) System.out.printf("* ");
                 else {
                     if(caselles[i][j].getEstaDescoberta()) System.out.printf("[");

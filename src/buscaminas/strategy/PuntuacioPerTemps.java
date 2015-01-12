@@ -12,7 +12,7 @@ package buscaminas.strategy;
 public class PuntuacioPerTemps extends Estrategia{
 
     @Override
-    public int getPuntuacio() {
+    public int getPuntuacio(int param) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

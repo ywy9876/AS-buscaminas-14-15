@@ -8,8 +8,9 @@ import exception.NoHiHaNivellsException;
 import model.Nivell;
 import model.MyHibernateUtil;
 
-public class PostgresNivell {
-	@SuppressWarnings("unchecked")
+public class PostgresNivell extends PostgresGeneral<Nivell>{
+	
+	
 	public ArrayList<Nivell> getAll() throws NoHiHaNivellsException{
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
 		

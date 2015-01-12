@@ -5,20 +5,44 @@
  */
 package model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  *
  * @author alexmorral
  */
-public class Casella {
-    private final int numFila;
-    private final int numColumna;
-    private boolean estaDescoberta;
-    private boolean estaMarcada;
-    private final boolean teMina;
-    private int numMines;
+
+@Entity
+@Table(name="caselles")
+public class Casella implements Serializable {
+	private static final long serialVersionUID = 1L;
+	@Id 
+	@GeneratedValue
+	@Column private int id;
+	
+	//@ManyToOne
+	//@JoinColumn(name="idpartida")
+	//private Partida partida;
+	@Column private int idpartida;
+    @Column private final int numFila;
+    @Column private final int numColumna;
+    @Column private boolean estaDescoberta;
+    @Column private boolean estaMarcada;
+    @Column private final boolean teMina;
+    @Column private int numMines;
     
-    public Casella(int nF, int nC, boolean desc, boolean marc, boolean mina) {
-        numFila = nF;
+    public Casella(int idPartida, int nF, int nC, boolean desc, boolean marc, boolean mina) {
+        this.idpartida = idPartida;
+    	numFila = nF;
         numColumna = nC;
         estaDescoberta = desc;
         estaMarcada = marc;

@@ -47,7 +47,8 @@ public class CtrlJugarPartida {
     public boolean authenticate(String username, String pass) throws UsernameNoExisteixException, PwdIncorrecteException {
     	boolean login = true;
 		this.username = username;
-		PostgresUsuariRegistrat pur = new PostgresUsuariRegistrat();
+		PostgresFactory pFactory = PostgresFactory.getInstance();
+    	PostgresUsuariRegistrat pur = pFactory.getPostgresUsuariRegistrat();
 		UsuariRegistrat ur = pur.getUsuari(username);
 		if(!ur.getPassword().equals(pass)) {
 			login = false;
@@ -57,7 +58,8 @@ public class CtrlJugarPartida {
 	}
     
     public ArrayList<String> getNomNivells() {
-    	PostgresNivell pn = new PostgresNivell();
+    	PostgresFactory pFactory = PostgresFactory.getInstance();
+    	PostgresNivell pn = pFactory.getPostgresNivell();
     	ArrayList<String> nomNivells = new ArrayList<String>();
     	try {
     		ArrayList<Nivell> nivs = pn.getAll();

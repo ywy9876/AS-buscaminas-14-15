@@ -13,5 +13,7 @@
     <mapping class="model.Partida"/>
     <mapping class="model.Nivell"/>
     <mapping class="model.UsuariRegistrat"/>
+    <mapping class="model.Casella"/>
+    <mapping class="model.Jugador"/>
   </session-factory>
 </hibernate-configuration>

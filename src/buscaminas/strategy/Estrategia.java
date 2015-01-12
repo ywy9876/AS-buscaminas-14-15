@@ -11,6 +11,6 @@ package buscaminas.strategy;
  */
 public abstract class Estrategia {
     
-    public abstract int getPuntuacio();
+    public abstract int getPuntuacio(int param);
 
 }
