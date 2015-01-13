@@ -1,0 +1,12 @@
+
+
+Guardar partides començades(cada tirada)
+
+Estrategies i puntuació (random)
+
+idPartida al començar
+
+Que nomes pugui fer partida un usuari que es jugador
+
+Missatgeria
+

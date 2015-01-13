@@ -99,8 +99,6 @@ public class CtrlJugarPartidaPresentacio {
 		
 		jpuc.mostrarPartida();
 		
-		
-		
 	}
 	
 	/**

@@ -6,6 +6,13 @@
 package model;
 
 import java.security.AccessControlContext;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -14,15 +21,23 @@ import org.hibernate.SessionFactory;
  *
  * @author albert
  */
+
+@Entity
+@Table(name="buscaminas")
 public class Buscaminas {
 
     /**
      * @param args the command line arguments
      */
-    
-    private static Buscaminas instance=null;
-    private int idPartida;
+	@Transient private static Buscaminas instance=null;
+	@Id
+	@Column
+	private int id = 1;
 
+	@Column
+    private int idProperaPartida;
+
+	
     private Buscaminas() {
     }
     
@@ -43,14 +58,14 @@ public class Buscaminas {
      * @return the idPartida
      */
     public int getIdPartida() {
-        return idPartida;
+        return idProperaPartida;
     }
 
     /**
      * @param idPartida the idPartida to set
      */
     public void setIdPartida(int idPartida) {
-        this.idPartida = idPartida;
+        this.idProperaPartida = idPartida;
     }
     
 }

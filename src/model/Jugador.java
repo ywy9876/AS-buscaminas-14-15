@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.persistence.Column;
@@ -19,17 +20,21 @@ import javax.persistence.Table;
  * @author albert
  */
 
-public class Jugador extends UsuariRegistrat{
+@Entity
+@Table(name="jugador")
+public class Jugador extends UsuariRegistrat implements Serializable{
     private static final long serialVersionUID = 1L;
 	
+    @Column(nullable=false)
+    private String email;
     
-    @Column private String email;
     @OneToOne
-    private Partida partidaActual;
+    private Partida idPartida;
     
     /*@OneToMany(mappedBy="idjugador", fetch=FetchType.EAGER)
     private ArrayList<Partida> partidesJugades;
     */
+    public Jugador() {}
     public Jugador(String n, String c, String u, String p) {
     	super(n,c,u,p);
     }

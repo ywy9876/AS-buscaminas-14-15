@@ -8,12 +8,15 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 /**
  *
@@ -21,6 +24,7 @@ import javax.persistence.Id;
  */
 
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 @Table(name="usuariregistrat")
 
 public class UsuariRegistrat implements Serializable {
@@ -28,10 +32,18 @@ public class UsuariRegistrat implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	@Id protected String nom;
-	protected String cognom;
-	protected String username;
-	protected String password;
+	@Id
+	@Column
+	private String username;
+	
+	@Column(nullable=false)
+	private String password;
+	
+	@Column(nullable=false)
+	private String nom;
+	
+	@Column(nullable=false)
+	private String cognom;
     
 	public UsuariRegistrat() {
     }

@@ -20,7 +20,7 @@ import postgres.*;
  */
 
 public class CtrlJugarPartida {
-    private String username;
+    private UsuariRegistrat usuari;
     private Partida p;
     private Nivell n;
     private boolean[][] mark;
@@ -34,9 +34,10 @@ public class CtrlJugarPartida {
     
     public Nivell createPartida(String nivell) {
         //cargarNivell amb nom nivell, si no existeix throw exception
-    	PostgresNivell pn = new PostgresNivell();
+    	PostgresFactory pFact = PostgresFactory.getInstance();
+    	PostgresNivell pn  = pFact.getPostgresNivell();
     	n = new Nivell(pn.getNivell(nivell));
-        p = new Partida(1);
+        p = new Partida(1, usuari);
         p.setNivell(n);
         p.initPartida();
         casellesDescobertes = 0;
@@ -46,10 +47,10 @@ public class CtrlJugarPartida {
     
     public boolean authenticate(String username, String pass) throws UsernameNoExisteixException, PwdIncorrecteException {
     	boolean login = true;
-		this.username = username;
 		PostgresFactory pFactory = PostgresFactory.getInstance();
     	PostgresUsuariRegistrat pur = pFactory.getPostgresUsuariRegistrat();
 		UsuariRegistrat ur = pur.getUsuari(username);
+		usuari = ur;
 		if(!ur.getPassword().equals(pass)) {
 			login = false;
 			throw new PwdIncorrecteException("Contrasenya no válida");

@@ -17,6 +17,8 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -34,6 +36,7 @@ import postgres.PostgresPartida;
  */
 
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 @Table(name="partida")
 
 public class Partida implements Serializable {
@@ -49,9 +52,13 @@ public class Partida implements Serializable {
    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="idjugador")
     private UsuariRegistrat jugador;
-    
-   /*@OneToMany*/ @Transient private Nivell nivell1;
-   @Column private String nivell = "pppp";
+   
+   @ManyToOne(fetch=FetchType.EAGER)
+   @JoinColumn(name="nivell") private Nivell nivell;
+  // @Column private String nivell = "pppp";
+   @Transient Casella[][] caselles;
+   
+   
    /*//@OneToMany(mappedBy="partida", targetEntity=Casella.class)
    //@OrderColumn(name="idPartida")
    @ElementCollection
@@ -59,14 +66,14 @@ public class Partida implements Serializable {
          name="caselles",
          joinColumns=@JoinColumn(name="idpartida")
    )*/
-   @Transient Casella[][] caselles;
+   
 
-    public Partida(int idPartida) {
+    public Partida(int idPartida, UsuariRegistrat ur) {
         this.idPartida=idPartida;
         this.estaAcabada=false;
         this.estaGuanyada=false;
         this.nombreTirades=0;
-        jugador = new UsuariRegistrat("test","test","test","test");
+        jugador = ur;
         
     }
     
@@ -75,11 +82,11 @@ public class Partida implements Serializable {
      * @return ArrayList<String> amb posicio de les mines
      */
     private ArrayList<String> generarMinas() {
-        int nombreMines = nivell1.getNombreMines();
+        int nombreMines = nivell.getNombreMines();
         ArrayList<Integer> f = new ArrayList<>();
-        for(int i = 0; i < nivell1.getNombreCasellesxFila(); ++i) f.add(i);
+        for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) f.add(i);
         ArrayList<Integer> c = new ArrayList<>();
-        for(int i = 0; i < nivell1.getNombreCasellesxColumna(); ++i) c.add(i);
+        for(int i = 0; i < nivell.getNombreCasellesxColumna(); ++i) c.add(i);
         int count = 0;
         ArrayList<String> minas = new ArrayList<>();
         while(count < nombreMines) {
@@ -95,8 +102,8 @@ public class Partida implements Serializable {
     
     
     public void initPartida() {
-        int nF = nivell1.getNombreCasellesxFila();
-        int nC = nivell1.getNombreCasellesxColumna();
+        int nF = nivell.getNombreCasellesxFila();
+        int nC = nivell.getNombreCasellesxColumna();
         this.caselles = new Casella[nF][nC];
         ArrayList<String> minas = generarMinas();
         for(int i = 0; i < nF; ++i) {
@@ -191,7 +198,7 @@ public class Partida implements Serializable {
      * @param nivell the nivell to set
      */
     public void setNivell(Nivell nivell) {
-        this.nivell1 = nivell;
+        this.nivell = nivell;
     }
     
     
@@ -221,8 +228,8 @@ public class Partida implements Serializable {
     
     
     public void mostrarPartida() {
-        for(int i = 0; i < nivell1.getNombreCasellesxFila(); ++i) {
-            for(int j = 0; j < nivell1.getNombreCasellesxColumna(); ++j) {
+        for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) {
+            for(int j = 0; j < nivell.getNombreCasellesxColumna(); ++j) {
                 if(caselles[i][j].getTeMina()) System.out.printf("* ");
                 else {
                     if(caselles[i][j].getEstaDescoberta()) System.out.printf("[");

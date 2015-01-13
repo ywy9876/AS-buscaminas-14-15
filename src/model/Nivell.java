@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -28,10 +29,12 @@ public class Nivell implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id private String nom;
-    private int nombreCasellesxFila;
-    private int nombreCasellesxColumna;
-    private int nombreMines;
+    @Column private int nombreCasellesxFila;
+    @Column private int nombreCasellesxColumna;
+    @Column private int nombreMines;
     
+    @Column private int minTemps;
+    @Column private int minTirades;
     //@ManyToOne private Collection<Partida> partidas;
     
     public Nivell(){}
@@ -41,13 +44,17 @@ public class Nivell implements Serializable {
     	this.nombreCasellesxColumna = niv.getNombreCasellesxColumna();
     	this.nombreCasellesxFila = niv.getNombreCasellesxFila();
     	this.nombreMines = niv.getNombreMines();
+    	this.minTemps = niv.getMinTemps();
+    	this.minTirades = niv.getMinTirades();
     }
     
-    public Nivell(String nom, int nombreCasellesxFila, int nombreCasellesxColumna, int nombreMines ) {
+    public Nivell(String nom, int nombreCasellesxFila, int nombreCasellesxColumna, int nombreMines, int minTemps, int minTirades) {
         this.nom = nom;
         this.nombreCasellesxFila = nombreCasellesxFila;
         this.nombreCasellesxColumna = nombreCasellesxColumna;
-        this.nombreMines = nombreMines;        
+        this.nombreMines = nombreMines;    
+        this.minTemps = minTemps;
+        this.minTirades = minTirades;
     }
     
     
@@ -98,6 +105,20 @@ public class Nivell implements Serializable {
      */
     public int getNombreMines() {
         return nombreMines;
+    }
+    
+    /**
+     * @return the minTemps
+     */
+    public int getMinTemps() {
+        return minTemps;
+    }
+    
+    /**
+     * @return the nombreMines
+     */
+    public int getMinTirades() {
+        return minTirades;
     }
 
     /**

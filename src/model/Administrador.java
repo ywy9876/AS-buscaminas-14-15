@@ -5,12 +5,24 @@
  */
 package model;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  *
  * @author albert
  */
-public class Administrador extends UsuariRegistrat{
-    private String telefon;
+
+@Entity
+@Table(name="admin")
+public class Administrador extends UsuariRegistrat implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+	@Column
+	private String telefon;
     
     public Administrador(String n, String c, String u, String p) {
     	super(n,c,u,p);
