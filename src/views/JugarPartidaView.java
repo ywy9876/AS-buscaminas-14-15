@@ -248,6 +248,7 @@ public class JugarPartidaView extends JFrame {
 					String pass = passField.getText();
 					if(pmc.PrLogin(username,pass)) {
 						setContentPane(categoriesSelectionPanel);
+						lb_messagesCategoriesPanel.setText("");
 						categoriesSelectionPanel.updateUI();
 					}
 					userField.setText("");
@@ -259,6 +260,7 @@ public class JugarPartidaView extends JFrame {
 			btn_login.setFont(new java.awt.Font("Arial", Font.BOLD, 15));
 			//btn_login.setBorder( BorderFactory.createLineBorder( new Color(0,133,0), 2 ));
 			add(btn_login);
+			
 		}
 	}
 	
@@ -486,35 +488,9 @@ public class JugarPartidaView extends JFrame {
 		this.tir.setText(String.valueOf(t));
 	}
 	
-	public void updateCurrentScoring(int points) {
-		/**Actualitza la puntuaci� actual*/
-		String Spoints = Integer.toString(points);
-		lb_currentPoints.setText("Punts: \n"+ Spoints);
-	}
-		
-	public void updateErrorCount(int ea,int nme) {
-		/**Actualitza la quantitat d'errors actuals respecte el nombre m�xim d'errors permesos*/
-		this.maxErrors = nme;
-		String errActuals = Integer.toString(ea);
-		String numMaxErr = Integer.toString(nme);
-		this.lb_ErrorCounter.setText("Errors : "+ea+" de "+maxErrors);
-	}
-	public void updateErrors(int ea) {
-		/**Actualitza la quantitat d'errors actuals respecte el nombre m�xim d'errors permesos*/
-		String errActuals = Integer.toString(ea);
-		lb_ErrorCounter.setText("Errors : "+ea+" de "+maxErrors );
-	}
-	
-	public void emptyLetterBoxes() {
-		/**Buidar el text corresponent a les caselles de la partida*/
-		for(int i=0; i < letters.length; ++i ) {
-			letters[i].setText("");
-		}
-	}
 	
 	public void stopMatch() {
 		/**Funci� corresponent al event de click sobre el bot� "Aturar Partida"*/
-		emptyLetterBoxes();
 		setContentPane(login);
 		login.updateUI();
 	}
@@ -537,9 +513,9 @@ public class JugarPartidaView extends JFrame {
 			}
 		if (guanyada) {
 			lb_messagesMatchPanel.setForeground( new Color( 0, 113, 0 ) );
-			lb_messagesMatchPanel.setText("Enhorabona has guanyat la partida!");
+			lb_messagesMatchPanel.setText("Enhorabona has guanyat la partida! Puntuacio: "+puntuacio);
 		}
-		else lb_messagesMatchPanel.setText("Has trobat una mina i has perdut!");
+		else lb_messagesMatchPanel.setText("Has trobat una mina i has perdut! Puntuacio: "+puntuacio);
 		lb_messagesMatchPanel.repaint();
 		btn_stopMatch.setVisible(false);
 		btn_finishMatch.setVisible(true);		

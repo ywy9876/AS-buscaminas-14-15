@@ -27,6 +27,7 @@ public class CtrlJugarPartida {
     private boolean[][] mark;
     private int casellesDescobertes;
     private int casellesADescobrir;
+    private boolean isJugador;
     
     public CtrlJugarPartida() {
         p = null;
@@ -58,6 +59,8 @@ public class CtrlJugarPartida {
 		PostgresFactory pFactory = PostgresFactory.getInstance();
     	PostgresUsuariRegistrat pur = pFactory.getPostgresUsuariRegistrat();
 		UsuariRegistrat ur = pur.getUsuari(username);
+		PostgresJugador pj = pFactory.getPostgresJugador();
+		isJugador = pj.exists(username);
 		usuari = ur;
 		if(!ur.getPassword().equals(pass)) {
 			login = false;
@@ -184,6 +187,9 @@ public class CtrlJugarPartida {
     	p.setTemps(t);
     }
     
+    public boolean isJugador() {
+    	return isJugador;
+    }
     /**
 	 * 
 	 * @return all the catgories of the system

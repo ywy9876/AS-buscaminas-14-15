@@ -24,6 +24,8 @@ public class Administrador extends UsuariRegistrat implements Serializable{
 	@Column
 	private String telefon;
     
+	public Administrador() {}
+	
     public Administrador(String n, String c, String u, String p) {
     	super(n,c,u,p);
     }

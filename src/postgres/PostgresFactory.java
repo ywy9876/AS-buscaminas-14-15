@@ -10,6 +10,8 @@ public class PostgresFactory {
 	
 	private PostgresBuscaminas postgresBuscaminas = null;
 	
+	private PostgresJugador postgresJugador = null;
+	
 	private static PostgresFactory instance = null;
 	
 	private PostgresFactory(){}
@@ -37,5 +39,10 @@ public class PostgresFactory {
 	public PostgresBuscaminas getPostgresBuscaminas() {
 		if(postgresBuscaminas == null) postgresBuscaminas = new PostgresBuscaminas();
 		return postgresBuscaminas;
+	}
+	
+	public PostgresJugador getPostgresJugador() {
+		if(postgresJugador == null) postgresJugador = new PostgresJugador();
+		return postgresJugador;
 	}
 }

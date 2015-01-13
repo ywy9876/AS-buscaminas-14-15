@@ -77,6 +77,8 @@ public class CtrlJugarPartidaPresentacio {
 		if (nivells.isEmpty()) {
 			jpv.showMessage("No hi ha Nivells", 1);
 		}
+		if(!jpuc.isJugador()) jpv.showMessage("Usuari no jugador", 1);
+		else jpv.lb_messagesCategoriesPanel.setText("");
 		return logged;
 	}
 	
