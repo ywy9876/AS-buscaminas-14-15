@@ -128,7 +128,8 @@ public class CtrlJugarPartidaPresentacio {
 		if(opt == 1) jpuc.descobrirCasella(i, j);
 		else  jpuc.marcarCasella(i, j);
 		if(jpuc.getIsPartidaAcabada()){
-			jpv.finishMatch(jpuc.getIsPartidaGuanyada());
+			int punt = jpuc.getPuntuacio();
+			jpv.finishMatch(jpuc.getIsPartidaGuanyada(), punt);
 		}
 		
 		jpv.updateBoard(jpuc.getCaselles());
@@ -139,7 +140,10 @@ public class CtrlJugarPartidaPresentacio {
 	public int checkCasella(int i, int j) {
 		return jpuc.checkCasella(i,j);
 	}
-        
+    
+	public void setTemps(int t) {
+		jpuc.setTemps(t);
+	}
 		
 	/**
 	 * tanca le programa un cop s'ha acabat el joc

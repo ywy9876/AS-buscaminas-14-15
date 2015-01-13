@@ -83,6 +83,7 @@ public class JugarPartidaView extends JFrame {
 	ActionListener updateTimerLabel = new ActionListener() {
 		public void actionPerformed (ActionEvent e){
 			int t = Integer.parseInt(temps.getText());
+			pmc.setTemps(t);
 			temps.setText(String.valueOf(t+1));
 		}
 	};
@@ -523,7 +524,7 @@ public class JugarPartidaView extends JFrame {
 		System.exit(-1);
 	}
 	
-	public void finishMatch(boolean guanyada) {
+	public void finishMatch(boolean guanyada, int puntuacio) {
 		/**Quan una partida �s finalitzada, pot ser que o b� hagui guanyat o b� hagui superat
 		  la quantitat maxima d'errors permesos, en funci� d'aquestes possibilitats actualitzem
 		  els labels de missatges i l'aparici� o no, del botons corresponents a l'interface*/

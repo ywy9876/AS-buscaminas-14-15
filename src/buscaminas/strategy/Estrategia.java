@@ -10,7 +10,11 @@ package buscaminas.strategy;
  * @author albert
  */
 public abstract class Estrategia {
+    public abstract String getNom();
+    public abstract int getPuntuacioPrincipiant(int param);
+    public abstract int getPuntuacioExpert(int param);
+    public abstract int getPuntuacioIntermedi(int param);
     
-    public abstract int getPuntuacio(int param);
-
+    
+    
 }

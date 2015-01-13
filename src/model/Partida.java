@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import buscaminas.strategy.Estrategia;
+import buscaminas.strategy.EstrategiaFactory;
 import postgres.PostgresFactory;
 import postgres.PostgresPartida;
 
@@ -40,7 +42,7 @@ public class Partida implements Serializable {
     @Column private boolean estaGuanyada;
     @Column private int nombreTirades;
     @Column private int temps = 0;
-    @Column private String estrategia = "estrategia";
+    @Column private String estrategia;
     
    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="idjugador")
@@ -117,6 +119,7 @@ public class Partida implements Serializable {
         }
         PostgresFactory pFact = PostgresFactory.getInstance();
         PostgresPartida pPartida = pFact.getPostgresPartida();
+        
         try {
         	pPartida.store(this);
         } catch (Exception e) {System.out.println(e);}
@@ -210,6 +213,28 @@ public class Partida implements Serializable {
     	return caselles[i][j].getEstaMarcada();
     }
     
+    public void setEstrategia(String estr) {
+    	this.estrategia = estr;
+    }
+    
+    public void setTemps(int t) {
+    	this.temps = t;
+    }
+    
+    public int getPuntuacio() {
+    	
+    	EstrategiaFactory e = new EstrategiaFactory();
+    	Estrategia estr = e.getEstrategia(estrategia);
+    	int puntuacio, param;
+    	if(estr.getNom().equals("PuntuacioPerNombreDeTirades")) param = nombreTirades;
+    	else param = temps;
+    	
+		if(nivell.getNom().equals("Principiant")) puntuacio = estr.getPuntuacioPrincipiant(param);
+		else if (nivell.getNom().equals("Intermedi")) puntuacio = estr.getPuntuacioIntermedi(param);
+		else puntuacio = estr.getPuntuacioExpert(param);
+    			
+    	return puntuacio;
+    }
     
     public void mostrarPartida() {
         for(int i = 0; i < nivell.getNombreCasellesxFila(); ++i) {

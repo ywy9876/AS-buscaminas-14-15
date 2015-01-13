@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import buscaminas.strategy.EstrategiaFactory;
 import exception.NoHiHaNivellsException;
 import exception.PwdIncorrecteException;
 import exception.UsernameNoExisteixException;
@@ -44,6 +45,9 @@ public class CtrlJugarPartida {
         pb.update(b);
         p.setNivell(n);
         p.initPartida();
+        
+        String estrategia = EstrategiaFactory.getEstrategiaRandom().getNom();
+        p.setEstrategia(estrategia);
         casellesDescobertes = 0;
         casellesADescobrir = (n.getNombreCasellesxFila()*n.getNombreCasellesxColumna())-n.getNombreMines();
         return n;
@@ -170,6 +174,14 @@ public class CtrlJugarPartida {
     
     public int getNombreTirades() {
     	return p.getNombreTirades();
+    }
+    
+    public int getPuntuacio() {
+    	return p.getPuntuacio();
+    }
+    
+    public void setTemps(int t) {
+    	p.setTemps(t);
     }
     
     /**

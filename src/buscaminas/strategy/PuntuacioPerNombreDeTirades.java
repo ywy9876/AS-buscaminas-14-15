@@ -10,9 +10,24 @@ package buscaminas.strategy;
  * @author albert
  */
 public class PuntuacioPerNombreDeTirades extends Estrategia{
-
+	
+	public PuntuacioPerNombreDeTirades(){}
+	
+	@Override
+	public String getNom() {
+		return "PuntuacioPerNombreDeTirades";
+	}
+    
+	@Override
+    public int getPuntuacioPrincipiant(int param) {
+		return 100-param;
+	}
     @Override
-    public int getPuntuacio(int param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int getPuntuacioExpert(int param) {
+    	return 1000-param;
+    }
+    @Override
+    public int getPuntuacioIntermedi(int param) {
+    	return 300-param;
     }
 }
