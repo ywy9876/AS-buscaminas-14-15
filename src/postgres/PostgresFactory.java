@@ -8,6 +8,8 @@ public class PostgresFactory {
 	
 	private PostgresPartida postgresPartida = null;
 	
+	private PostgresBuscaminas postgresBuscaminas = null;
+	
 	private static PostgresFactory instance = null;
 	
 	private PostgresFactory(){}
@@ -30,5 +32,10 @@ public class PostgresFactory {
 	public PostgresPartida getPostgresPartida() {
 		if(postgresPartida == null) postgresPartida = new PostgresPartida();
 		return postgresPartida;
+	}
+	
+	public PostgresBuscaminas getPostgresBuscaminas() {
+		if(postgresBuscaminas == null) postgresBuscaminas = new PostgresBuscaminas();
+		return postgresBuscaminas;
 	}
 }

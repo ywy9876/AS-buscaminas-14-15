@@ -5,15 +5,11 @@
  */
 package model;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -21,9 +17,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -32,7 +25,7 @@ import postgres.PostgresPartida;
 
 /**
  *
- * @author albert
+ * @author alexmorral
  */
 
 @Entity
@@ -55,17 +48,8 @@ public class Partida implements Serializable {
    
    @ManyToOne(fetch=FetchType.EAGER)
    @JoinColumn(name="nivell") private Nivell nivell;
-  // @Column private String nivell = "pppp";
    @Transient Casella[][] caselles;
    
-   
-   /*//@OneToMany(mappedBy="partida", targetEntity=Casella.class)
-   //@OrderColumn(name="idPartida")
-   @ElementCollection
-   @CollectionTable(
-         name="caselles",
-         joinColumns=@JoinColumn(name="idpartida")
-   )*/
    
 
     public Partida(int idPartida, UsuariRegistrat ur) {

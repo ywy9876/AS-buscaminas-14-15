@@ -90,7 +90,7 @@ public class CtrlJugarPartidaPresentacio {
 	 * @param categoryName
 	 * @throws UserIsNotPlayerException 
 	 */
-	public void PrStartMatch(String nivell) {
+	public void PrStartMatch(String nivell) throws Exception{
 	
 		Nivell n = jpuc.createPartida(nivell);
 		jpv.buildBoard(jpuc.getCaselles(), n);

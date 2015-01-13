@@ -32,12 +32,16 @@ public class CtrlJugarPartida {
         n = null;
     }
     
-    public Nivell createPartida(String nivell) {
-        //cargarNivell amb nom nivell, si no existeix throw exception
+    public Nivell createPartida(String nivell) throws Exception{
     	PostgresFactory pFact = PostgresFactory.getInstance();
     	PostgresNivell pn  = pFact.getPostgresNivell();
+    	PostgresBuscaminas pb = pFact.getPostgresBuscaminas();
+    	Buscaminas b = pb.getBuscaminas();
+    	int idPartida = b.getIdPartida();
     	n = new Nivell(pn.getNivell(nivell));
-        p = new Partida(1, usuari);
+        p = new Partida(idPartida, usuari);
+        b.setIdPartida(idPartida+1);
+        pb.update(b);
         p.setNivell(n);
         p.initPartida();
         casellesDescobertes = 0;

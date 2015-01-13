@@ -19,7 +19,7 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author albert
+ * @author alexmorral
  */
 
 @Entity

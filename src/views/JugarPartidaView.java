@@ -422,14 +422,13 @@ public class JugarPartidaView extends JFrame {
 			btn_startMatch.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					String cat = String.valueOf(cBox_Nivells.getSelectedItem());
-					//try {
+					try {
 						pmc.PrStartMatch(cat);
 						setContentPane(matchPanel);
 						
-					//} catch (UserIsNotPlayerException e) {
-					//	Log.debug("PlayMatchView", "user is not player");
-						//showMessage("L'usuari no es un jugador.", 1);
-					//}
+					} catch (Exception e) {
+						showMessage(e.toString(), 1);
+					}
 					matchPanel.updateUI();
 				}
 			});
