@@ -472,7 +472,7 @@ public class JugarPartidaView extends JFrame {
 			matchPanelMessages.setText("Enhorabona has guanyat la partida! Puntuacio: "+puntuacio);
 		}
 		else {
-			matchPanelMessages.setText("Has trobat una mina i has perdut! Puntuacio: "+puntuacio);
+			matchPanelMessages.setText("Has trobat una mina i has perdut!");
 			matchPanelMessages.setForeground(Color.RED);
 		}
 		matchPanelMessages.repaint();

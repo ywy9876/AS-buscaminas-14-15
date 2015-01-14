@@ -129,9 +129,9 @@ public class CtrlJugarPartida {
     public void descobrirCasellaRec(int i, int j) {
     	Casella c = p.getCasella(i, j);
     	mark[i][j] = true;
+    	c.setEstaDescoberta(true);
+		++casellesDescobertes;
     	if(!c.getTeMina() && c.getNumMines()==0) {
-    		c.setEstaDescoberta(true);
-    		++casellesDescobertes;
     		int nF = n.getNombreCasellesxFila();
     		int nC = n.getNombreCasellesxColumna();
     		

@@ -20,11 +20,11 @@ public class PuntuacioPerNombreDeTirades extends Estrategia{
     
 	@Override
     public int getPuntuacioPrincipiant(int param) {
-		return 100-param;
+		return 140-param;
 	}
     @Override
     public int getPuntuacioExpert(int param) {
-    	return 1000-param;
+    	return 500-param;
     }
     @Override
     public int getPuntuacioIntermedi(int param) {
