@@ -63,4 +63,8 @@ public class UsuariRegistrat implements Serializable {
     	return false;
     }
     
+    public String getNom() {
+    	return nom;
+    }
+    
 }

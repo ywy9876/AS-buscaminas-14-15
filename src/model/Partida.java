@@ -224,6 +224,10 @@ public class Partida implements Serializable {
     	this.temps = t;
     }
     
+    public int getTemps() {
+    	return this.temps;
+    }
+    
     public Nivell getNivell() {
     	return nivell;
     }
@@ -231,7 +235,7 @@ public class Partida implements Serializable {
     public int getCasellesDescobertes() {
     	 PostgresFactory pFact = PostgresFactory.getInstance();
          PostgresPartida pPartida = pFact.getPostgresPartida();
-         //caselles = pPartida.getCaselles(idPartida);
+         caselles = pPartida.getCaselles(idPartida, nivell.getNombreCasellesxFila(), nivell.getNombreCasellesxColumna());
     	int count = 0;
     	for(Casella[] casell : caselles)
     		for(Casella c : casell) if(c.getEstaDescoberta()) ++count;
@@ -258,9 +262,7 @@ public class Partida implements Serializable {
             for(int j = 0; j < nivell.getNombreCasellesxColumna(); ++j) {
                 if(caselles[i][j].getTeMina()) System.out.printf("* ");
                 else {
-                    if(caselles[i][j].getEstaDescoberta()) System.out.printf("[");
                     System.out.printf("%d", caselles[i][j].getNumMines());
-                    if(caselles[i][j].getEstaDescoberta()) System.out.printf("]");
                     System.out.printf(" ");
                 }
             }

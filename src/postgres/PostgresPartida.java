@@ -1,6 +1,7 @@
 package postgres;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,15 +32,25 @@ public class PostgresPartida extends PostgresGeneral<Partida> {
 		return partida;
 	}
 	
-	/*public Casella[][] getCaselles() {
+	
+	
+	public Casella[][] getCaselles(int idPartida, int nF, int nC) {
 		Session session = MyHibernateUtil.getSessionFactory().openSession();
-		/*Casella[][] caselles;
-		Casella[][] caselles = (Casella[][]) session.createQuery("from " + Partida.class.getSimpleName()).list();
+		//select * from caselles where idpartida=18 order by numfila, numcolumna;
+		String query = "from "+Casella.class.getSimpleName()+" where idpartida= "+idPartida+" order by numfila, numcolumna";
+		List<Casella> casellesList = (List<Casella>) session.createQuery(query).list();
+		Casella[][] caselles = new Casella[nF][nC];
+		int k = 0;
+		for(int i = 0; i < nF; ++i)
+			for(int j = 0; j < nC; ++j) {
+				caselles[i][j] = casellesList.get(k); 
+				++k;
+			}
 		
 		session.close();
 		
-		return partides;
-	}*/
+		return caselles;
+	}
 	
 	@Override
 	public Partida store(Partida p) throws Exception {

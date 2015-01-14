@@ -15,6 +15,7 @@ import exception.PwdIncorrecteException;
 import exception.UsernameNoExisteixException;
 import model.*;
 import postgres.*;
+import service.*;
 /**
  *
  * @author alexmorral
@@ -161,7 +162,6 @@ public class CtrlJugarPartida {
     	if(teMina) p.setEstaAcabada(true);
     	else {
     		++casellesDescobertes;
-    		System.out.println("CasellesDescobertes: "+casellesDescobertes+ " / CasellesADescobrir: "+casellesADescobrir);
     		if(casellesDescobertes >= casellesADescobrir) {
     			p.setEstaAcabada(true);
     			p.setEstaGuanyada(true);
@@ -223,6 +223,25 @@ public class CtrlJugarPartida {
     
     public Nivell getNivell() {
     	return n;
+    }
+    
+    public int getTemps() {
+    	return p.getTemps();
+    }
+    
+    public void sendMail() throws Exception{
+    	EmailService emailService = null;
+		emailService = (EmailService) ServiceLocator.getInstance().find("EmailService");
+		if(emailService != null) {
+			String messageBody = "Enhorabona, has guanyat la partida amb puntuacio: " + p.getPuntuacio();
+			String subject = "Informacio Partida Guanyada Buscamines";
+			emailService.sendMail(jugador.getNom(), jugador.getEmail(), subject, messageBody);
+		}
+    }
+    public void updatePartida() throws Exception{
+    	PostgresFactory pFact = PostgresFactory.getInstance();
+    	PostgresPartida pp = pFact.getPostgresPartida();
+    	pp.update(p);
     }
     
     public void updateCaselles() throws Exception{

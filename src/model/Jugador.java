@@ -54,4 +54,8 @@ public class Jugador extends UsuariRegistrat implements Serializable{
     public Partida getPartida() {
     	return idPartida;
     }
+    
+    public String getEmail() {
+    	return email;
+    }
 }

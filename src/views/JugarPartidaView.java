@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,16 +8,12 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -30,15 +25,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import model.Casella;
 import model.Nivell;
 
-//import edu.upc.fib.wordguess.domain.model.Category;
-//import edu.upc.fib.wordguess.util.Log;
 
 
 public class JugarPartidaView extends JFrame {
@@ -66,10 +56,6 @@ public class JugarPartidaView extends JFrame {
 	JButton btn_CheckLetter;
 	JButton btn_stopMatch;
 	JButton btn_finishMatch;
-	private int index;
-	private boolean matchWon;
-	private int numLetters;
-	private int maxErrors;
 	private JButton but[][];
 	JPanel gridPanel;
 	JLabel lb_nivell;
@@ -255,7 +241,7 @@ public class JugarPartidaView extends JFrame {
 								pmc.PrLoadPartida();
 								setContentPane(matchPanel);
 							} catch (Exception eX) {
-								
+								showMessage(eX.toString(), 0);
 							}
 							matchPanel.updateUI();
 						} else {
@@ -283,31 +269,12 @@ public class JugarPartidaView extends JFrame {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-
-	/**Pantalla corresponent a la partida que s'est� jugant
-		* Mostra puntuaci� actual, num errors i les caselles per tal d'endevinar la paraula, 
-		* a m�s apareixar�n els botons: comprovar, aturar partida i tancar partida*/
 		public JPartidaEnJoc() {
 			setLayout(new GridBagLayout());
 			
 			
-			JButton btn_back = new JButton("Back");
 			GridBagConstraints c = new GridBagConstraints();
-			c.gridy=0;
-			c.gridx=0;
 			
-			btn_back.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					timer.stop();
-					temps.setText("0");
-					pmc.PrStopMatch();
-					setContentPane(categoriesSelectionPanel);
-					categoriesSelectionPanel.updateUI();
-					matchPanel.remove(gridPanel);
-				}
-			});
-			
-			add(btn_back, c);
 			
 			lb_nivell = new JLabel("NIVELL");
 			lb_nivell.setFont(new java.awt.Font("Arial",1,18));
@@ -337,11 +304,16 @@ public class JugarPartidaView extends JFrame {
 			btn_stopMatch = new JButton("Aturar");
 			btn_stopMatch.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					pmc.PrStopMatch();
-					setContentPane(categoriesSelectionPanel);
-					categoriesSelectionPanel.updateUI();
-					for(JButton[] buttons : but)
-						for(JButton b: buttons) matchPanel.remove(b);
+					timer.stop();
+					temps.setText("0");
+					try {
+						pmc.PrStopMatch();
+					} catch (Exception eX) {
+						showMessage(eX.toString(), 0);
+					}
+					setContentPane(login);
+					login.updateUI();
+					matchPanel.remove(gridPanel);
 				}
 			});
 			
@@ -352,8 +324,8 @@ public class JugarPartidaView extends JFrame {
 			
 			btn_stopMatch.setVisible(true);
 			//c2.fill = GridBagConstraints.HORIZONTAL;
-			c.gridy=3;
-			c.gridx=0;
+			c.gridy=5;
+			c.gridx=1;
 			
 			add(btn_stopMatch, c);
 			
@@ -390,18 +362,15 @@ public class JugarPartidaView extends JFrame {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		/**Pantalla corresponent a seleccionar una categoria de paraules per tal de que la partida
-		 *sigui creada amb una paraula random de les corresponents a la categoria escollida*/
 		public JSelniv() {
 			setLayout(null);
 			
 			
-			//label seleccionar categoria
-			JLabel lb_Selcat = new JLabel("Tria una nivell:");
-			lb_Selcat.setFont(new java.awt.Font("Tahoma",0,20));
-			lb_Selcat.setHorizontalAlignment(SwingConstants.CENTER);
-			lb_Selcat.setBounds(200, 60, 200, 30);
-			add(lb_Selcat);
+			JLabel lb_SelNivell = new JLabel("Tria un nivell:");
+			lb_SelNivell.setFont(new java.awt.Font("Tahoma",0,20));
+			lb_SelNivell.setHorizontalAlignment(SwingConstants.CENTER);
+			lb_SelNivell.setBounds(200, 60, 200, 30);
+			add(lb_SelNivell);
 			
 			//combobox
 			cBox_Nivells = new JComboBox<String>();
@@ -503,21 +472,15 @@ public class JugarPartidaView extends JFrame {
 	
 	
 	public void stopMatch() {
-		/**Funci� corresponent al event de click sobre el bot� "Aturar Partida"*/
 		setContentPane(login);
 		login.updateUI();
 	}
 	
 	public void close() {
-		/**Funci� corresponent al event de click sobre el bot� "Tancar Partida"*/
 		System.exit(-1);
 	}
 	
 	public void finishMatch(boolean guanyada, int puntuacio) {
-		/**Quan una partida �s finalitzada, pot ser que o b� hagui guanyat o b� hagui superat
-		  la quantitat maxima d'errors permesos, en funci� d'aquestes possibilitats actualitzem
-		  els labels de missatges i l'aparici� o no, del botons corresponents a l'interface*/
-		this.matchWon = guanyada;
 		timer.stop();
 		for(JButton[] buttons : but)
 			for(JButton b : buttons) {
@@ -528,30 +491,21 @@ public class JugarPartidaView extends JFrame {
 			lb_messagesMatchPanel.setForeground( new Color( 0, 113, 0 ) );
 			lb_messagesMatchPanel.setText("Enhorabona has guanyat la partida! Puntuacio: "+puntuacio);
 		}
-		else lb_messagesMatchPanel.setText("Has trobat una mina i has perdut! Puntuacio: "+puntuacio);
+		else {
+			lb_messagesMatchPanel.setText("Has trobat una mina i has perdut! Puntuacio: "+puntuacio);
+			lb_messagesMatchPanel.setForeground(Color.RED);
+		}
 		lb_messagesMatchPanel.repaint();
 		btn_stopMatch.setVisible(false);
-		btn_finishMatch.setVisible(true);		
+		btn_finishMatch.setVisible(true);
+		if(guanyada) {
+			try {
+				pmc.enviarEmail();
+			} catch(Exception eX) {
+				System.out.println(eX.toString());
+			}
+			
+		}
 	}
-	/*
-	public void markLetterBox(boolean encert) {
-		if(encert) {
-			letters[index].setBackground(Color.green);
-		}
-		else {
-			letters[index].setBackground(Color.red);
-			showMessage("La lletra es incorrecta",2);
-		}
-		for (int i=0; i<numLetters; ++i) {
-			if (letters[i].getBackground() == Color.green) {
-				letters[i].setEnabled(false);
-				letters[i].setDisabledTextColor(Color.BLACK);
-			}
-			else {
-				letters[i].setEnabled(true);
-			}
-			letters[i].setBorder(UIManager.getBorder("TextField.border"));
-		}
-		if(!encert) letters[index].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.black));
-	}*/
+	
 }

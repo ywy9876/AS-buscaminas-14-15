@@ -6,6 +6,7 @@ import java.util.List;
 
 
 
+
 /*
 import edu.upc.fib.wordguess.data.exception.PlayerNotExistsException;
 import edu.upc.fib.wordguess.data.exception.UserNotExistsException;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 
 
 
+
+import service.EmailService;
+import service.ServiceLocator;
 import model.Nivell;
 public class CtrlJugarPartidaPresentacio {
 	
@@ -50,17 +54,7 @@ public class CtrlJugarPartidaPresentacio {
 		jpv.setVisible(true);	
 	}
 				
-	/**
-	 * al premer el boto de login es comprovara si es pot loguejar
-	 * en cas contrari es capturaran les excepcions corresponent
-	 * tot i ser el login correcte aqui comprovem si el sistema disposa de categories
-	 * per passar a la seguent vista
-	 * 
-	 * 
-	 * @username
-	 * 
-	 * @pass
-	 * */
+	
 	public boolean PrLogin(String username,String pass){
 		boolean logged = false;
 		try {
@@ -85,12 +79,7 @@ public class CtrlJugarPartidaPresentacio {
 		//No fa res
 	}
 	
-	/**
-	 * Creates a new match taking a word from the given category.
-	 * 
-	 * @param categoryName
-	 * @throws UserIsNotPlayerException 
-	 */
+	
 	public void PrStartMatch(String nivell) throws Exception{
 	
 		Nivell n = jpuc.createPartida(nivell);
@@ -105,7 +94,8 @@ public class CtrlJugarPartidaPresentacio {
 	public void PrLoadPartida() throws Exception{
 		jpuc.loadPartida();
 		jpv.buildBoard(jpuc.getCaselles(), jpuc.getNivell());
-		
+		jpv.updateBoard(jpuc.getCaselles());
+		jpv.temps.setText(String.valueOf(jpuc.getTemps()));
 		jpuc.mostrarPartida();
 	}
 	
@@ -113,21 +103,14 @@ public class CtrlJugarPartidaPresentacio {
 		return jpuc.tePartida();
 	}
 	
-	/**
-	 * para la partida, retornara a la pantalla de seleccio de categories
-	 */
-	public void PrStopMatch(){
+	
+	public void PrStopMatch() throws Exception{
+		jpuc.updatePartida();
 		System.out.println("JugarPartidaController.PrAturarPartida()");
 		//jpuc.stopMatch();
 	}
 	
-	/**
-	 * li passem una posicio i una lletra i el sistema comprova si es un encert
-	 * i actualitza tot el que calgui a la partida
-	 * 
-	 * @param pos
-	 * @param lletra
-	 */
+	
 	public void PrCheck(int i, int j, int opt) throws IOException, Exception {
 		
 		if(opt == 1) jpuc.descobrirCasella(i, j);
@@ -135,11 +118,13 @@ public class CtrlJugarPartidaPresentacio {
 		if(jpuc.getIsPartidaAcabada()){
 			int punt = jpuc.getPuntuacio();
 			jpv.finishMatch(jpuc.getIsPartidaGuanyada(), punt);
-		}
+			
+		} 
 		
 		jpv.updateBoard(jpuc.getCaselles());
 		jpuc.updateCaselles();
 		jpv.actualitzaTirades(jpuc.getNombreTirades());
+		
 		
 	}
 	
@@ -151,9 +136,11 @@ public class CtrlJugarPartidaPresentacio {
 		jpuc.setTemps(t);
 	}
 		
-	/**
-	 * tanca le programa un cop s'ha acabat el joc
-	 */
+	public void enviarEmail() throws Exception{
+		if(jpuc.getIsPartidaGuanyada()) {
+			jpuc.sendMail();
+		}
+	}
 	public void PrFinishGame(){
 		System.exit(-1);
 	}
