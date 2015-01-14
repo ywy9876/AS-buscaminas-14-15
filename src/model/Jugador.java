@@ -31,10 +31,9 @@ public class Jugador extends UsuariRegistrat implements Serializable{
     @OneToOne
     private Partida idPartida;
     
-    /*@OneToMany(mappedBy="idjugador", fetch=FetchType.EAGER)
-    private ArrayList<Partida> partidesJugades;
-    */
-    public Jugador() {}
+    public Jugador() {
+    	idPartida = null;
+    }
     public Jugador(String n, String c, String u, String p) {
     	super(n,c,u,p);
     }
@@ -45,7 +44,14 @@ public class Jugador extends UsuariRegistrat implements Serializable{
     }
     
     public void assignarPartida(Partida p){
-        
+        idPartida = p;
     }
     
+    public boolean tePartida() {
+    	return (idPartida!=null);
+    }
+    
+    public Partida getPartida() {
+    	return idPartida;
+    }
 }

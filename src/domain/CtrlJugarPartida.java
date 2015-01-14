@@ -22,6 +22,7 @@ import postgres.*;
 
 public class CtrlJugarPartida {
     private UsuariRegistrat usuari;
+    private Jugador jugador;
     private Partida p;
     private Nivell n;
     private boolean[][] mark;
@@ -38,21 +39,35 @@ public class CtrlJugarPartida {
     	PostgresFactory pFact = PostgresFactory.getInstance();
     	PostgresNivell pn  = pFact.getPostgresNivell();
     	PostgresBuscaminas pb = pFact.getPostgresBuscaminas();
+    	PostgresJugador pj = pFact.getPostgresJugador();
     	Buscaminas b = pb.getBuscaminas();
     	int idPartida = b.getIdPartida();
     	n = new Nivell(pn.getNivell(nivell));
-        p = new Partida(idPartida, usuari);
+        p = new Partida(idPartida, jugador);
+        
         b.setIdPartida(idPartida+1);
+        jugador.assignarPartida(p);
         pb.update(b);
+       
         p.setNivell(n);
-        p.initPartida();
         
         String estrategia = EstrategiaFactory.getEstrategiaRandom().getNom();
         p.setEstrategia(estrategia);
+        p.initPartida();
+        pj.update(jugador);
         casellesDescobertes = 0;
         casellesADescobrir = (n.getNombreCasellesxFila()*n.getNombreCasellesxColumna())-n.getNombreMines();
         return n;
     }
+    
+    
+    public void loadPartida() {
+    	p = jugador.getPartida();
+    	n = p.getNivell();
+    	casellesADescobrir = (n.getNombreCasellesxFila()*n.getNombreCasellesxColumna())-n.getNombreMines();
+    	casellesDescobertes = p.getCasellesDescobertes();
+    }
+    
     
     public boolean authenticate(String username, String pass) throws UsernameNoExisteixException, PwdIncorrecteException {
     	boolean login = true;
@@ -61,6 +76,9 @@ public class CtrlJugarPartida {
 		UsuariRegistrat ur = pur.getUsuari(username);
 		PostgresJugador pj = pFactory.getPostgresJugador();
 		isJugador = pj.exists(username);
+		if(isJugador) jugador = pj.getJugador(username);
+		if(jugador.tePartida()) System.out.println("SI TE PARTIDA");
+		else System.out.println("NO TE PARTIDA");
 		usuari = ur;
 		if(!ur.getPassword().equals(pass)) {
 			login = false;
@@ -68,6 +86,10 @@ public class CtrlJugarPartida {
 		}
 		return login;
 	}
+    
+    public boolean tePartida() {
+    	return jugador.tePartida();
+    }
     
     public ArrayList<String> getNomNivells() {
     	PostgresFactory pFactory = PostgresFactory.getInstance();
@@ -121,7 +143,7 @@ public class CtrlJugarPartida {
     	}
     }
     
-    public void descobrirCasella(int i, int j) throws IOException{
+    public void descobrirCasella(int i, int j) throws IOException, Exception{
     	Casella c = p.getCasella(i, j);
     	if(c.getEstaDescoberta()) throw new IOException("Casella ja descoberta");
     	if(c.getEstaMarcada()) throw new IOException("Casella ja marcada");
@@ -146,6 +168,14 @@ public class CtrlJugarPartida {
     		}
     	}
     	p.setNombreTirades(p.getNombreTirades()+1);
+    	PostgresFactory pFact = PostgresFactory.getInstance();
+    	PostgresPartida pp = pFact.getPostgresPartida();
+    	pp.update(p);
+    	if(p.isEstaAcabada()) {
+    		PostgresJugador pj = pFact.getPostgresJugador();
+    		jugador.assignarPartida(null);
+    		pj.update(jugador);
+    	}
     }
     
     public int checkCasella(int i, int j) {
@@ -190,13 +220,14 @@ public class CtrlJugarPartida {
     public boolean isJugador() {
     	return isJugador;
     }
-    /**
-	 * 
-	 * @return all the catgories of the system
-	 */
-	/*public ArrayList<String> fetchCategories() {
-		Log.debug(TAG, "fetch categories");
-		FetchCategoriesTransaction fetchCategories = new FetchCategoriesTransaction();
-		return fetchCategories.execute();
-	}*/
+    
+    public Nivell getNivell() {
+    	return n;
+    }
+    
+    public void updateCaselles() throws Exception{
+    	PostgresFactory pFact = PostgresFactory.getInstance();
+    	PostgresPartida pp = pFact.getPostgresPartida();
+    	pp.update(p.getCaselles());
+    }
 }

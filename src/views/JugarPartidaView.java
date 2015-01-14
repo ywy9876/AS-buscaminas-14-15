@@ -164,6 +164,8 @@ public class JugarPartidaView extends JFrame {
 										
 									} catch (IOException eX){
 										
+									} catch (Exception eX) {
+										
 									}
 								}
 							}
@@ -247,9 +249,20 @@ public class JugarPartidaView extends JFrame {
 					String username = userField.getText();
 					String pass = passField.getText();
 					if(pmc.PrLogin(username,pass)) {
-						setContentPane(categoriesSelectionPanel);
-						lb_messagesCategoriesPanel.setText("");
-						categoriesSelectionPanel.updateUI();
+						if(pmc.jugadorTePartida()) {
+							System.out.println("Abans de carregar partida");
+							try {
+								pmc.PrLoadPartida();
+								setContentPane(matchPanel);
+							} catch (Exception eX) {
+								
+							}
+							matchPanel.updateUI();
+						} else {
+							setContentPane(categoriesSelectionPanel);
+							lb_messagesCategoriesPanel.setText("");
+							categoriesSelectionPanel.updateUI();
+						}
 					}
 					userField.setText("");
 					passField.setText("");

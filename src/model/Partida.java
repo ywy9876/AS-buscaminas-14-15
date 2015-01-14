@@ -46,20 +46,23 @@ public class Partida implements Serializable {
     
    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="idjugador")
-    private UsuariRegistrat jugador;
+    private Jugador jugador;
    
    @ManyToOne(fetch=FetchType.EAGER)
    @JoinColumn(name="nivell") private Nivell nivell;
    @Transient Casella[][] caselles;
    
    
-
-    public Partida(int idPartida, UsuariRegistrat ur) {
+   	public Partida(){}
+   	
+   	
+    public Partida(int idPartida, Jugador ur) {
         this.idPartida=idPartida;
         this.estaAcabada=false;
         this.estaGuanyada=false;
         this.nombreTirades=0;
         jugador = ur;
+        
         
     }
     
@@ -219,6 +222,20 @@ public class Partida implements Serializable {
     
     public void setTemps(int t) {
     	this.temps = t;
+    }
+    
+    public Nivell getNivell() {
+    	return nivell;
+    }
+    
+    public int getCasellesDescobertes() {
+    	 PostgresFactory pFact = PostgresFactory.getInstance();
+         PostgresPartida pPartida = pFact.getPostgresPartida();
+         //caselles = pPartida.getCaselles(idPartida);
+    	int count = 0;
+    	for(Casella[] casell : caselles)
+    		for(Casella c : casell) if(c.getEstaDescoberta()) ++count;
+    	return count;
     }
     
     public int getPuntuacio() {

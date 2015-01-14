@@ -29,7 +29,6 @@ import java.util.ArrayList;
 
 
 import model.Nivell;
-
 public class CtrlJugarPartidaPresentacio {
 	
 	private JugarPartidaView jpv;
@@ -103,6 +102,17 @@ public class CtrlJugarPartidaPresentacio {
 		
 	}
 	
+	public void PrLoadPartida() throws Exception{
+		jpuc.loadPartida();
+		jpv.buildBoard(jpuc.getCaselles(), jpuc.getNivell());
+		
+		jpuc.mostrarPartida();
+	}
+	
+	public boolean jugadorTePartida() {
+		return jpuc.tePartida();
+	}
+	
 	/**
 	 * para la partida, retornara a la pantalla de seleccio de categories
 	 */
@@ -118,14 +128,7 @@ public class CtrlJugarPartidaPresentacio {
 	 * @param pos
 	 * @param lletra
 	 */
-	public void PrCheck(int i, int j, int opt) throws IOException {
-		/*PlayLetterInfoTuple playInfo = jpuc.playLetter(pos, lletra.charAt(0));
-		jpv.markLetterBox(playInfo.success);
-		if (playInfo.isFinished) {
-			jpv.finishMatch(playInfo.isWon);
-		}
-		jpv.updateCurrentScoring(playInfo.currentScore);
-		jpv.updateErrors(playInfo.numErrors);*/
+	public void PrCheck(int i, int j, int opt) throws IOException, Exception {
 		
 		if(opt == 1) jpuc.descobrirCasella(i, j);
 		else  jpuc.marcarCasella(i, j);
@@ -135,6 +138,7 @@ public class CtrlJugarPartidaPresentacio {
 		}
 		
 		jpv.updateBoard(jpuc.getCaselles());
+		jpuc.updateCaselles();
 		jpv.actualitzaTirades(jpuc.getNombreTirades());
 		
 	}

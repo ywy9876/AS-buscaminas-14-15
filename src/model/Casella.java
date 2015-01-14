@@ -33,12 +33,14 @@ public class Casella implements Serializable {
 	//@JoinColumn(name="idpartida")
 	//private Partida partida;
 	@Column private int idpartida;
-    @Column private final int numFila;
-    @Column private final int numColumna;
+    @Column private int numFila;
+    @Column private int numColumna;
     @Column private boolean estaDescoberta;
     @Column private boolean estaMarcada;
-    @Column private final boolean teMina;
+    @Column private boolean teMina;
     @Column private int numMines;
+    
+    public Casella(){}
     
     public Casella(int idPartida, int nF, int nC, boolean desc, boolean marc, boolean mina) {
         this.idpartida = idPartida;

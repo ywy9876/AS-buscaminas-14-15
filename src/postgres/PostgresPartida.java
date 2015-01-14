@@ -31,6 +31,16 @@ public class PostgresPartida extends PostgresGeneral<Partida> {
 		return partida;
 	}
 	
+	/*public Casella[][] getCaselles() {
+		Session session = MyHibernateUtil.getSessionFactory().openSession();
+		/*Casella[][] caselles;
+		Casella[][] caselles = (Casella[][]) session.createQuery("from " + Partida.class.getSimpleName()).list();
+		
+		session.close();
+		
+		return partides;
+	}*/
+	
 	@Override
 	public Partida store(Partida p) throws Exception {
 		SessionFactory sessionFactory = MyHibernateUtil.getSessionFactory();
@@ -48,4 +58,19 @@ public class PostgresPartida extends PostgresGeneral<Partida> {
 		return p;
 	}
 	
-}
+	public void update(Casella[][] caselles) throws Exception{
+			
+			SessionFactory sessionFactory = MyHibernateUtil.getSessionFactory();
+			Session session = sessionFactory.openSession();
+			
+			session.beginTransaction();
+			for(Casella[] casella : caselles)
+				for(Casella c : casella) session.merge(c);
+			session.getTransaction().commit();
+			
+			session.close();
+			
+		}
+	}
+	
+
