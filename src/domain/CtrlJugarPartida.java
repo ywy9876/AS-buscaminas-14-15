@@ -77,9 +77,11 @@ public class CtrlJugarPartida {
 		UsuariRegistrat ur = pur.getUsuari(username);
 		PostgresJugador pj = pFactory.getPostgresJugador();
 		isJugador = pj.exists(username);
-		if(isJugador) jugador = pj.getJugador(username);
-		if(jugador.tePartida()) System.out.println("SI TE PARTIDA");
-		else System.out.println("NO TE PARTIDA");
+		if(isJugador) {
+			jugador = pj.getJugador(username);
+			if(jugador.tePartida()) System.out.println("SI TE PARTIDA");
+			else System.out.println("NO TE PARTIDA");
+		}
 		usuari = ur;
 		if(!ur.getPassword().equals(pass)) {
 			login = false;

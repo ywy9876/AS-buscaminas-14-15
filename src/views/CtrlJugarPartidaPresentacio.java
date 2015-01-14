@@ -1,43 +1,21 @@
 package views;
 
 import java.io.IOException;
-import java.util.List;
 
-
-
-
-
-/*
-import edu.upc.fib.wordguess.data.exception.PlayerNotExistsException;
-import edu.upc.fib.wordguess.data.exception.UserNotExistsException;
-import edu.upc.fib.wordguess.domain.controllers.usecase.MatchInfoTuple;
-import edu.upc.fib.wordguess.domain.controllers.usecase.PlayLetterInfoTuple;
-import edu.upc.fib.wordguess.domain.controllers.usecase.PlayMatchUseCaseController;
-import edu.upc.fib.wordguess.domain.exception.InvalidPasswordException;
-import edu.upc.fib.wordguess.domain.model.Category;
-*/
 import domain.*;
 import exception.PwdIncorrecteException;
 import exception.UsernameNoExisteixException;
 
 import java.util.ArrayList;
-/*
- Controlador de la capa de presentacio
- te un controlador de les vistes i el controlador de cas d'us de domini (associacions)
- */
 
 
 
 
-
-import service.EmailService;
-import service.ServiceLocator;
 import model.Nivell;
 public class CtrlJugarPartidaPresentacio {
 	
 	private JugarPartidaView jpv;
 	private CtrlJugarPartida jpuc;
-	private int idPartida;
 	
 	/**
 	 * constructora per defecte
@@ -71,13 +49,10 @@ public class CtrlJugarPartidaPresentacio {
 			jpv.showMessage("No hi ha Nivells", 1);
 		}
 		if(!jpuc.isJugador()) jpv.showMessage("Usuari no jugador", 1);
-		else jpv.lb_messagesCategoriesPanel.setText("");
+		else jpv.nivellPanelMessages.setText("");
 		return logged;
 	}
 	
-	public void PrLogout(){
-		//No fa res
-	}
 	
 	
 	public void PrStartMatch(String nivell) throws Exception{
@@ -100,14 +75,13 @@ public class CtrlJugarPartidaPresentacio {
 	}
 	
 	public boolean jugadorTePartida() {
-		return jpuc.tePartida();
+		return jpuc.isJugador() && jpuc.tePartida();
 	}
 	
 	
 	public void PrStopMatch() throws Exception{
 		jpuc.updatePartida();
-		System.out.println("JugarPartidaController.PrAturarPartida()");
-		//jpuc.stopMatch();
+		System.out.println("Partida Aturada");
 	}
 	
 	

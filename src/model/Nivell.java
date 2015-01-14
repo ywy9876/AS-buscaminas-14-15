@@ -33,8 +33,6 @@ public class Nivell implements Serializable {
     @Column private int nombreCasellesxColumna;
     @Column private int nombreMines;
     
-    @Column private int minTemps;
-    @Column private int minTirades;
     //@ManyToOne private Collection<Partida> partidas;
     
     public Nivell(){}
@@ -44,17 +42,13 @@ public class Nivell implements Serializable {
     	this.nombreCasellesxColumna = niv.getNombreCasellesxColumna();
     	this.nombreCasellesxFila = niv.getNombreCasellesxFila();
     	this.nombreMines = niv.getNombreMines();
-    	this.minTemps = niv.getMinTemps();
-    	this.minTirades = niv.getMinTirades();
     }
     
-    public Nivell(String nom, int nombreCasellesxFila, int nombreCasellesxColumna, int nombreMines, int minTemps, int minTirades) {
+    public Nivell(String nom, int nombreCasellesxFila, int nombreCasellesxColumna, int nombreMines) {
         this.nom = nom;
         this.nombreCasellesxFila = nombreCasellesxFila;
         this.nombreCasellesxColumna = nombreCasellesxColumna;
-        this.nombreMines = nombreMines;    
-        this.minTemps = minTemps;
-        this.minTirades = minTirades;
+        this.nombreMines = nombreMines;
     }
     
     
@@ -107,20 +101,7 @@ public class Nivell implements Serializable {
         return nombreMines;
     }
     
-    /**
-     * @return the minTemps
-     */
-    public int getMinTemps() {
-        return minTemps;
-    }
     
-    /**
-     * @return the nombreMines
-     */
-    public int getMinTirades() {
-        return minTirades;
-    }
-
     /**
      * @param nombreMines the nombreMines to set
      */
