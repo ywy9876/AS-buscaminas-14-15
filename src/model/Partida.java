@@ -20,8 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import buscaminas.strategy.Estrategia;
-import buscaminas.strategy.EstrategiaFactory;
+import model.strategy.*;
 import postgres.PostgresFactory;
 import postgres.PostgresPartida;
 
@@ -246,13 +245,10 @@ public class Partida implements Serializable {
     	
     	EstrategiaFactory e = new EstrategiaFactory();
     	Estrategia estr = e.getEstrategia(estrategia);
-    	int puntuacio, param;
-    	if(estr.getNom().equals("PuntuacioPerNombreDeTirades")) param = nombreTirades;
-    	else param = temps;
-    	
-		if(nivell.getNom().equals("Principiant")) puntuacio = estr.getPuntuacioPrincipiant(param);
-		else if (nivell.getNom().equals("Intermedi")) puntuacio = estr.getPuntuacioIntermedi(param);
-		else puntuacio = estr.getPuntuacioExpert(param);
+    	int puntuacio;
+		if(nivell.getNom().equals("Principiant")) puntuacio = estr.getPuntuacioPrincipiant();
+		else if (nivell.getNom().equals("Intermedi")) puntuacio = estr.getPuntuacioIntermedi();
+		else puntuacio = estr.getPuntuacioExpert();
     			
     	return puntuacio;
     }

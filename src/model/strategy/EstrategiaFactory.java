@@ -1,12 +1,16 @@
-package buscaminas.strategy;
+package model.strategy;
 
 import java.util.Random;
 
 public class EstrategiaFactory {
-	private static final int nombreEstrategies = 2;
+		
+		private static final int nombreEstrategies = 2;
 	
 		public EstrategiaFactory(){}
-	
+		
+		/**
+	     * @return Estrategia random de les que hi ha al sistema
+	     */
 		public static Estrategia getEstrategiaRandom() {
 			Random rand = new Random();
 			int r = rand.nextInt(nombreEstrategies);
@@ -19,6 +23,9 @@ public class EstrategiaFactory {
 		}
 		
 		
+		/**
+	     * @return Estrategia amb nom est
+	     */
 		public Estrategia getEstrategia(String est) {
 	    	if(est.equals("PuntuacioPerNombreDeTirades")) return new PuntuacioPerNombreDeTirades();
 	    	else return new PuntuacioPerTemps();

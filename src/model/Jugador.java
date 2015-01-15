@@ -29,32 +29,48 @@ public class Jugador extends UsuariRegistrat implements Serializable{
     private String email;
     
     @OneToOne
-    private Partida idPartida;
+    private Partida partida;
     
     public Jugador() {
-    	idPartida = null;
+    	partida = null;
     }
     public Jugador(String n, String c, String u, String p) {
     	super(n,c,u,p);
     }
     
+    
     @Override
+    /**
+     * @return true si l'usuari es jugador, false en cas contrari
+     */
     public boolean isUsuariJugador() {
        return true;
     }
     
+    /**
+     * Asigna la partida p al jugador
+     */
     public void assignarPartida(Partida p){
-        idPartida = p;
+        partida = p;
     }
     
+    /**
+     * @return true si el jugador te una partida, false en cas contrari
+     */
     public boolean tePartida() {
-    	return (idPartida!=null);
+    	return (partida!=null);
     }
     
+    /**
+     * @return partida
+     */
     public Partida getPartida() {
-    	return idPartida;
+    	return partida;
     }
     
+    /**
+     * @return email
+     */
     public String getEmail() {
     	return email;
     }

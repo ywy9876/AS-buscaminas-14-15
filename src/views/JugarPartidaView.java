@@ -136,10 +136,10 @@ public class JugarPartidaView extends JFrame {
 								if(but[i][j].equals(b)) {
 									try {
 										if(SwingUtilities.isRightMouseButton(e)) {
-											presentationController.PrCheck(i, j, 2);
+											presentationController.PrCheckCasella(i, j, 2);
 										}
 										else if (!b.getText().equals("M")){
-											presentationController.PrCheck(i, j, 1);
+											presentationController.PrCheckCasella(i, j, 1);
 										}
 										
 									} catch (IOException eX){
@@ -224,14 +224,14 @@ public class JugarPartidaView extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					String username = userField.getText();
 					String pass = passField.getText();
-					if(presentationController.PrLogin(username,pass)) {
+					if(presentationController.prLogin(username,pass)) {
 						if(presentationController.jugadorTePartida()) {
 							System.out.println("Abans de carregar partida");
 							try {
 								presentationController.PrLoadPartida();
 								setContentPane(matchPanel);
 							} catch (Exception eX) {
-								showMessage(eX.toString(), 0);
+								mostrarAvis(eX.toString(), 0);
 							}
 							matchPanel.updateUI();
 						} else {
@@ -293,9 +293,9 @@ public class JugarPartidaView extends JFrame {
 					timer.stop();
 					temps.setText("0");
 					try {
-						presentationController.PrStopMatch();
+						presentationController.prTancar();
 					} catch (Exception eX) {
-						showMessage(eX.toString(), 0);
+						mostrarAvis(eX.toString(), 0);
 					}
 					setContentPane(loginPanel);
 					loginPanel.updateUI();
@@ -331,7 +331,7 @@ public class JugarPartidaView extends JFrame {
 			finishPartidaBtn.setVisible(false);
 			finishPartidaBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					presentationController.PrFinishGame();
+					presentationController.prSortir();
 				}
 			});
 			c.gridy=5;
@@ -390,11 +390,11 @@ public class JugarPartidaView extends JFrame {
 				public void actionPerformed(ActionEvent arg0) {
 					String cat = String.valueOf(cBox_Nivells.getSelectedItem());
 					try {
-						presentationController.PrStartMatch(cat);
+						presentationController.prCrearPartida(cat);
 						setContentPane(matchPanel);
 						
 					} catch (Exception e) {
-						showMessage(e.toString(), 1);
+						mostrarAvis(e.toString(), 1);
 					}
 					matchPanel.updateUI();
 				}
@@ -419,14 +419,14 @@ public class JugarPartidaView extends JFrame {
 		setContentPane(loginPanel);
 	}
 	
-        public void loadNivells(ArrayList<String> nivells) {
+        public void mostraNivells(ArrayList<String> nivells) {
                 cBox_Nivells.removeAllItems();
                 for (String st : nivells) {
                 	cBox_Nivells.addItem(st);
                 }
         }
 	
-	public void showMessage(String text,int panelNumber) {
+	public void mostrarAvis(String text,int panelNumber) {
 		/**Mostra un missatge al label corresponent en funci� de la pantalla indicada*/
 		if(panelNumber==0) {
 			//Pantalla de Login
@@ -478,14 +478,7 @@ public class JugarPartidaView extends JFrame {
 		matchPanelMessages.repaint();
 		stopPartidaBtn.setVisible(false);
 		finishPartidaBtn.setVisible(true);
-		if(guanyada) {
-			try {
-				presentationController.enviarEmail();
-			} catch(Exception eX) {
-				System.out.println(eX.toString());
-			}
-			
-		}
+		
 	}
 	
 }

@@ -33,7 +33,6 @@ public class Nivell implements Serializable {
     @Column private int nombreCasellesxColumna;
     @Column private int nombreMines;
     
-    //@ManyToOne private Collection<Partida> partidas;
     
     public Nivell(){}
     
@@ -60,7 +59,8 @@ public class Nivell implements Serializable {
     }
 
     /**
-     * @param nom the nom to set
+     * Asigna nom a this.nom
+     * @param nom 
      */
     public void setNom(String nom) {
         this.nom = nom;

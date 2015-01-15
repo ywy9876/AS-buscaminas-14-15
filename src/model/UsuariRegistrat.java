@@ -59,10 +59,16 @@ public class UsuariRegistrat implements Serializable {
         return password;
     }
     
+    /**
+     * @return false
+     */
     public boolean isUsuariJugador() {
     	return false;
     }
     
+    /**
+     * @return nom
+     */
     public String getNom() {
     	return nom;
     }

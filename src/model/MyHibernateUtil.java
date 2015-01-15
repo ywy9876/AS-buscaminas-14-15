@@ -5,7 +5,6 @@ package model;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import org.hibernate.Session;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.SessionFactory;
 
@@ -13,7 +12,7 @@ import org.hibernate.SessionFactory;
  * Hibernate Utility class with a convenient method to get Session Factory
  * object.
  *
- * @author albert
+ * @author alexmorral
  */
 public class MyHibernateUtil {
 
@@ -35,13 +34,4 @@ public class MyHibernateUtil {
         return sessionFactory;
     }
 
-    public static void save(Object t) {
-        SessionFactory factory = MyHibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
-        session.beginTransaction();
-        
-        // UsuariRegistrat t = new UsuariRegistrat("Paco");
-        session.save(t);
-        session.getTransaction().commit();
-    }
 }

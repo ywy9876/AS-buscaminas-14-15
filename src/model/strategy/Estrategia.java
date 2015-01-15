@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package buscaminas.strategy;
+package model.strategy;
 
 /**
  *
- * @author albert
+ * @author alexmorral
  */
 public abstract class Estrategia {
     public abstract String getNom();
-    public abstract int getPuntuacioPrincipiant(int param);
-    public abstract int getPuntuacioExpert(int param);
-    public abstract int getPuntuacioIntermedi(int param);
+    public abstract int getPuntuacioPrincipiant();
+    public abstract int getPuntuacioExpert();
+    public abstract int getPuntuacioIntermedi();
     
     
     

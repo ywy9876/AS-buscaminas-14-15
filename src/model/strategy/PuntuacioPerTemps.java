@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package buscaminas.strategy;
+package model.strategy;
 
 /**
  *
- * @author albert
+ * @author alexmorral
  */
 public class PuntuacioPerTemps extends Estrategia{
 	
@@ -19,16 +19,16 @@ public class PuntuacioPerTemps extends Estrategia{
 	}
 	
 	@Override
-    public int getPuntuacioPrincipiant(int param) {
-		return 200-param;
+    public int getPuntuacioPrincipiant() {
+		return 100;
 	}
     @Override
-    public int getPuntuacioExpert(int param) {
-    	return 600-param;
+    public int getPuntuacioExpert() {
+    	return 500;
     }
     @Override
-    public int getPuntuacioIntermedi(int param) {
-    	return 400-param;
+    public int getPuntuacioIntermedi() {
+    	return 300;
     }
     
 }
