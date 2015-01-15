@@ -11,7 +11,7 @@ import views.CtrlJugarPartidaPresentacio;
  * @author alexmorral
  */
 
-public class Buscaminas {
+public class MainProgram {
     public static void main(String[] args) {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
