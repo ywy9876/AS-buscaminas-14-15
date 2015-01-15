@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import model.strategy.EstrategiaFactory;
-import exception.NoHiHaNivellsException;
-import exception.PwdIncorrecteException;
-import exception.UsernameNoExisteixException;
+import model.exception.NoHiHaNivellsException;
+import model.exception.PwdIncorrecteException;
+import model.exception.UsernameNoExisteixException;
 import model.*;
 import postgres.*;
 import service.*;

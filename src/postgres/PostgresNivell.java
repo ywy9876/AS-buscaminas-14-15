@@ -3,7 +3,7 @@ package postgres;
 import java.util.ArrayList;
 import org.hibernate.Session;
 
-import exception.NoHiHaNivellsException;
+import model.exception.NoHiHaNivellsException;
 
 import model.Nivell;
 import model.MyHibernateUtil;

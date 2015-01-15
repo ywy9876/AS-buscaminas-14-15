@@ -1,4 +1,4 @@
-package exception;
+package model.exception;
 
 public class UsernameNoExisteixException extends Exception{
 

@@ -3,8 +3,8 @@ package views;
 import java.io.IOException;
 
 import domain.*;
-import exception.PwdIncorrecteException;
-import exception.UsernameNoExisteixException;
+import model.exception.PwdIncorrecteException;
+import model.exception.UsernameNoExisteixException;
 
 import java.util.ArrayList;
 

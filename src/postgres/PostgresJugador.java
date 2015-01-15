@@ -3,7 +3,7 @@ package postgres;
 
 import org.hibernate.Session;
 
-import exception.UsernameNoExisteixException;
+import model.exception.UsernameNoExisteixException;
 import model.Jugador;
 import model.MyHibernateUtil;
 import model.UsuariRegistrat;
