@@ -29,7 +29,10 @@ import javax.swing.Timer;
 import model.Casella;
 import model.Nivell;
 
-
+/**
+*
+* @author alexmorral
+*/
 
 public class JugarPartidaView extends JFrame {
 	
@@ -47,7 +50,7 @@ public class JugarPartidaView extends JFrame {
 	JLabel loginPanelMessages;
 	JLabel matchPanelMessages;
 	JLabel nivellPanelMessages;
-	JButton startPartidaBtn;
+	JButton jugarPartidaBtn;
 	JButton stopPartidaBtn;
 	JButton finishPartidaBtn;
 	private JButton but[][];
@@ -68,7 +71,9 @@ public class JugarPartidaView extends JFrame {
 		}
 	};
 	
-	
+	/**
+	 * Actualitza el tauler de mines
+	 */
 	public void updateBoard(Casella[][] caselles) {
 		for(int i = 0; i < nF; ++i)
 			for(int j = 0; j < nC; ++j) {
@@ -93,7 +98,9 @@ public class JugarPartidaView extends JFrame {
 		
 	}
 	
-	
+	/**
+	 * Genera el tauler de mines
+	 */
 	public void buildBoard(Casella[][] caselles, Nivell n) {
 		gridPanel = new JPanel();
 		timer = new Timer(1000, updateTimerLabel);
@@ -199,7 +206,6 @@ public class JugarPartidaView extends JFrame {
 			//textField username
 			userField = new JTextField();
 			userField.setBounds(320, 100, 130, 30);
-			userField.setBackground( Color.LIGHT_GRAY );
 			userField.setFont(new java.awt.Font("Arial",0,17));
 			add(userField);
 			userField.setColumns(10);
@@ -207,7 +213,6 @@ public class JugarPartidaView extends JFrame {
 			//textField contrasenya
 			passField = new JPasswordField();
 			passField.setBounds(320, 150, 130, 30);
-			passField.setBackground( Color.lightGray );
 			passField.setFont(new java.awt.Font("Arial",0,17));
 			add(passField);
 			
@@ -307,7 +312,6 @@ public class JugarPartidaView extends JFrame {
 			stopPartidaBtn.setFont(new java.awt.Font("ARIAL", Font.BOLD, 15));
 			
 			stopPartidaBtn.setVisible(true);
-			//c2.fill = GridBagConstraints.HORIZONTAL;
 			c.gridy=5;
 			c.gridx=1;
 			
@@ -318,15 +322,9 @@ public class JugarPartidaView extends JFrame {
 			c.gridy=4;
 			c.gridx=1;
 			add(matchPanelMessages,c);
-			
-			
-			
-			
 			finishPartidaBtn = new JButton("Tancar");
-			//finishPartidaBtn.setBackground( new Color( 255, 112, 112) );
 			finishPartidaBtn.setBounds( 250 , 290, 100, 35);
 			finishPartidaBtn.setFont(new java.awt.Font("ARIAL", Font.BOLD, 16));
-			//finishPartidaBtn.setBorder( BorderFactory.createLineBorder( new Color(133,0,0), 2 ));
 			
 			finishPartidaBtn.setVisible(false);
 			finishPartidaBtn.addActionListener(new ActionListener() {
@@ -341,9 +339,6 @@ public class JugarPartidaView extends JFrame {
 	}
 	
 	public class JSelecNivell extends JPanel {
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		public JSelecNivell() {
@@ -370,23 +365,23 @@ public class JugarPartidaView extends JFrame {
 			nivellPanelMessages.setFont(new java.awt.Font("ARIAL",0,17));
 			add(nivellPanelMessages);
 			
-			//boto logout
-			JButton btn_logout = new JButton("Sortir");
-			btn_logout.addActionListener(new ActionListener() {
+			//boto sortir
+			JButton sortirBtn = new JButton("Sortir");
+			sortirBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					loginPanelMessages.setText("");
 					setContentPane(loginPanel);
 					loginPanel.updateUI();
-					startPartidaBtn.setEnabled(true);
+					jugarPartidaBtn.setEnabled(true);
 				}
 			});
-			btn_logout.setBounds( 150 , 280, 100, 35);
-			btn_logout.setFont(new java.awt.Font("ARIAL", Font.BOLD, 16));
-			add(btn_logout);
+			sortirBtn.setBounds( 150 , 280, 100, 35);
+			sortirBtn.setFont(new java.awt.Font("ARIAL", Font.BOLD, 16));
+			add(sortirBtn);
 			
 			//boto ok
-			startPartidaBtn = new JButton("Jugar");
-			startPartidaBtn.addActionListener(new ActionListener() {
+			jugarPartidaBtn = new JButton("Jugar");
+			jugarPartidaBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					String cat = String.valueOf(cBox_Nivells.getSelectedItem());
 					try {
@@ -400,9 +395,9 @@ public class JugarPartidaView extends JFrame {
 				}
 			});
 
-			startPartidaBtn.setBounds( 350 , 280, 100, 35);
-			startPartidaBtn.setFont(new java.awt.Font("ARIAL", Font.BOLD, 16));
-			add(startPartidaBtn);
+			jugarPartidaBtn.setBounds( 350 , 280, 100, 35);
+			jugarPartidaBtn.setFont(new java.awt.Font("ARIAL", Font.BOLD, 16));
+			add(jugarPartidaBtn);
 			
 		}
 	}
@@ -426,21 +421,20 @@ public class JugarPartidaView extends JFrame {
                 }
         }
 	
-	public void mostrarAvis(String text,int panelNumber) {
-		/**Mostra un missatge al label corresponent en funci� de la pantalla indicada*/
-		if(panelNumber==0) {
-			//Pantalla de Login
+	public void mostrarAvis(String text,int panel) {
+		if(panel==0) {
+			//Login
 			loginPanelMessages.setText(text);
 			loginPanelMessages.setForeground(Color.red);
 		}
-		else if(panelNumber==1) {
-			//Pantalla de Nivells
+		else if(panel==1) {
+			//Nivells
 			nivellPanelMessages.setText(text);
 			nivellPanelMessages.setForeground(Color.red);
-			startPartidaBtn.setEnabled(false);
+			jugarPartidaBtn.setEnabled(false);
 		}
 		else {
-			//Pantalla de Partida
+			//Partida
 			matchPanelMessages.setText(text);
 			matchPanelMessages.setForeground(Color.red);
 		}		
@@ -451,7 +445,10 @@ public class JugarPartidaView extends JFrame {
 	}
 	
 	
-	public void stopMatch() {
+	public void aturarPartida() {
+		/**
+		 * Atura la partida i torna al login
+		 */
 		setContentPane(loginPanel);
 		loginPanel.updateUI();
 	}
@@ -460,7 +457,10 @@ public class JugarPartidaView extends JFrame {
 		System.exit(-1);
 	}
 	
-	public void finishMatch(boolean guanyada, int puntuacio) {
+	public void finalitzaPartida(boolean guanyada, int puntuacio) {
+		/**
+		 * Cridada quan s'ha finalitzat la partida, mostra la puntuacio en cas de Guanyada
+		 */
 		timer.stop();
 		for(JButton[] buttons : but)
 			for(JButton b : buttons) {

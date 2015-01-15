@@ -10,6 +10,11 @@ import java.util.ArrayList;
 
 import model.Nivell;
 
+/**
+*
+* @author alexmorral
+*/
+
 public class CtrlJugarPartidaPresentacio {
 	
 	private JugarPartidaView partidaView;
@@ -121,7 +126,7 @@ public class CtrlJugarPartidaPresentacio {
 		else  ctrlJugarPartida.marcarCasella(i, j);
 		if(ctrlJugarPartida.getIsPartidaAcabada()){
 			int punt = ctrlJugarPartida.getPuntuacio();
-			partidaView.finishMatch(ctrlJugarPartida.getIsPartidaGuanyada(), punt);
+			partidaView.finalitzaPartida(ctrlJugarPartida.getIsPartidaGuanyada(), punt);
 			
 		} 
 		

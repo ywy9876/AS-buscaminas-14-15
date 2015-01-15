@@ -1,6 +1,10 @@
 package model.strategy;
 
 import java.util.Random;
+/**
+*
+* @author alexmorral
+*/
 
 public class EstrategiaFactory {
 		
