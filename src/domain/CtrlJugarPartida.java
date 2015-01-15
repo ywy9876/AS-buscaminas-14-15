@@ -134,7 +134,7 @@ public class CtrlJugarPartida {
     	if(!c.getTeMina() && c.getNumMines()==0) {
     		int nF = n.getNombreCasellesxFila();
     		int nC = n.getNombreCasellesxColumna();
-    		
+    		//++casellesDescobertes;
     		if(i+1<nF && j+1<nC && !mark[i+1][j+1]) descobrirCasellaRec(i+1,j+1);
             if(i+1<nF && !mark[i+1][j]) descobrirCasellaRec(i+1,j);
             if(i+1<nF && j-1>-1 && !mark[i+1][j-1]) descobrirCasellaRec(i+1,j-1);
@@ -152,18 +152,20 @@ public class CtrlJugarPartida {
     	if(c.getEstaMarcada()) throw new IOException("Casella ja marcada");
     	int numMines = c.getNumMines();
     	boolean teMina = c.getTeMina();
+    	boolean sumat = false;
     	if(numMines==0 && !teMina) {
     		mark = new boolean[n.getNombreCasellesxFila()][n.getNombreCasellesxColumna()];
     		for(boolean[] b : mark) Arrays.fill(b, false);
     		descobrirCasellaRec(i,j);
-    		--casellesDescobertes;
+    		sumat = true;
     	}
     	else {
     		c.setEstaDescoberta(true);
     	}
     	if(teMina) p.setEstaAcabada(true);
     	else {
-    		++casellesDescobertes;
+    		System.out.println("Caselles Descobertes: "+casellesDescobertes + " / Caselles a descobrir: "+casellesADescobrir);
+    		if(!sumat) ++casellesDescobertes;
     		if(casellesDescobertes >= casellesADescobrir) {
     			p.setEstaAcabada(true);
     			p.setEstaGuanyada(true);

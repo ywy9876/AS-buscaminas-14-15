@@ -38,9 +38,9 @@ public class CtrlJugarPartidaPresentacio {
 		try {
 			logged = jpuc.authenticate(username, pass);
 		} catch (UsernameNoExisteixException e) {
-			jpv.showMessage(e.toString(), 0);
+			jpv.showMessage("Username no existeix", 0);
 		} catch (PwdIncorrecteException e) {
-			jpv.showMessage(e.toString(), 0);
+			jpv.showMessage("Password incorrecte", 0);
 		} 
 		
 		ArrayList<String> nivells = jpuc.getNomNivells();

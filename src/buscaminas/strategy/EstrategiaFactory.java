@@ -9,7 +9,7 @@ public class EstrategiaFactory {
 	
 		public static Estrategia getEstrategiaRandom() {
 			Random rand = new Random();
-			int r = rand.nextInt(nombreEstrategies-1);
+			int r = rand.nextInt(nombreEstrategies);
 			
 			if(r == 1) {
 				return new PuntuacioPerTemps();
