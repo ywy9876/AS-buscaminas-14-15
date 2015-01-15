@@ -68,7 +68,8 @@ public class CtrlJugarPartidaPresentacio {
 	/**
 	 * Crea la partida amb el Nivell amb nom nivell
 	 * 
-	 * A diferencia del diagrama, passem per paràmetre el nivell seleccionat.
+	 * A diferencia del diagrama, passem per paràmetre només el nivell seleccionat, 
+	 * sense el jugador ja que no el necessitem.
 	 * A més, no es pot crear una partida si no s'ha seleccionat un nivell
 	 * 
 	 * @param nivell
