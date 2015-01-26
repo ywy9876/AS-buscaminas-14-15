@@ -6,7 +6,7 @@
 ##Features
 
 * Log In 
-* Connection with a Postgres database
+* Connection to a Postgres database using Hibernate
 	* Saves user's data
 	* Saves match levels
 	* Saves matchs
