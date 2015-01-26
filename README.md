@@ -1,5 +1,4 @@
 #AS-Project
-==========
 
 **Minesweeper game made in Java for the Software Architecture subject.**
 
